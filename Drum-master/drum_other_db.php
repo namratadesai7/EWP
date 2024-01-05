@@ -9,16 +9,16 @@ include('../includes/dbcon.php');
 if (isset($_POST['submit'])) {
     $name = strtoupper($_POST['name']);
 
-    $query = "SELECT MAX(id) as id from drum_stage";
+    $query = "SELECT MAX(id) as id from drum_other";
     $connect = sqlsrv_query($conn, $query);
     $crow = sqlsrv_fetch_array($connect, SQLSRV_FETCH_ASSOC);
     $id = $crow['id'] + 1;
 
-    $sql = "INSERT into drum_stage (id,name,isDelete,createdBy) values ('$id', '$name','0','$user')";
+    $sql = "INSERT into drum_other (id,name,isDelete,createdBy) values ('$id', '$name','0','$user')";
     $result = sqlsrv_query($conn, $sql);
 
     if ($result) {
-        header("Location:drum_stage.php");
+        header("Location:drum_other.php");
         $_SESSION['insert'] = "Data Inserted Successfully";
     } else {
         print_r(sqlsrv_errors());
@@ -29,11 +29,11 @@ if (isset($_POST['submit'])) {
 if (isset($_GET['deleteid'])) {
     $id = $_GET['deleteid'];
 
-    $sql = "UPDATE drum_stage SET isDelete = '1' where id=$id";
+    $sql = "UPDATE drum_other SET isDelete = '1' where id=$id";
     $result = sqlsrv_query($conn, $sql);
 
     if ($result) {
-        header('Location:drum_stage.php');
+        header('Location:drum_other.php');
         $_SESSION['delete'] = "Data Deleted Successfully";
     } else {
         print_r(sqlsrv_errors());
@@ -43,11 +43,11 @@ if (isset($_GET['deleteid'])) {
 if (isset($_POST['update'])) {
     $editName = $_POST['editName'];
     $editId = $_POST['editId'];
-    $sql = "UPDATE drum_stage SET name='$editName', updatedBy='$user' , updatedAt='$cur_date' where id='$editId'";
+    $sql = "UPDATE drum_other SET name='$editName', updatedBy='$user' , updatedAt='$cur_date' where id='$editId'";
 
     $result = sqlsrv_query($conn, $sql);
     if ($result) {
-        header('Location:drum_stage.php');
+        header('Location:drum_other.php');
         $_SESSION['update'] = "Data Updated Successfully";
     } else {
         print_r(sqlsrv_errors());

@@ -11,6 +11,14 @@ include('../includes/header.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+        .other,.material{
+            display:none;
+        }
+       
+       .abc{
+        display:flex;
+       
+       }
         .fl{
             margin-top:2rem;
         }
@@ -49,16 +57,27 @@ include('../includes/header.php');
 <body>
 
     <div class="container-fluid fl ">
-         <form action="drumshift_db.php" method="post" >
+
             <div class="row mb-3">
-                <div class="col"><h4 class="pt-2 mb-0">Add Drum details</h4></div>
-                <!-- <div class="col-auto"> <button type="submit" class="btn  rounded-pill common-btn"  name="save" >Save</button></div>
-                <div class="col-auto p-0"> <a type="" class="btn  rounded-pill btn-secondary " href="drumshift.php">Back</a></div> -->
+                <div class="col">
+                    <h4 class="pt-2 mb-0">Add Drum details</h4>
+                </div>
                 <div class="col-auto">
-                <a href="session_destroy.php"  class="btn rounded-pill btn-danger" name="reset">Reset</a>
+                    <a href="session_destroy.php"  class="btn  btn-danger" name="reset">Reset</a>
+                </div>
+                <div class="col-auto">
+                    <form action="drumshift_getexcel.php" method="POST" >
+                        <div class="abc">
+                        <input type="month" id="month" class="form-control"  name="month">
+						<button type="submit" class="btn btn-danger mx-1 getexcel" name="getexcel" >Export</button>
+                        </div>
+                       
+					</form>
                 </div>
             </div>
-
+        <form action="drumshift_db.php" method="post" >
+           
+       
             <div class="divCss">
                 <div class="row px-2">
                 <?php
@@ -80,7 +99,10 @@ include('../includes/header.php');
                     $tplant=$row1['To_Plant'];
                     $dseries=$row1['Drum_series'];
                     $dnum=$row1['Drum_No'];
+                    $type=$row1['Type'];
                     $stage=$row1['Stage'];
+                    $material=$row1['Material'];
+                    $other=$row1['Others'];
                     $ncore=$row1['No_of_core'];
                     $corepair=$row1['corepair'];
                     $sqmm=$row1['Sqmm'];
@@ -101,6 +123,9 @@ include('../includes/header.php');
                     $dseries='';
                     $dnum='';
                     $stage='';
+                    $type= '';
+                    $material='';
+                    $other='';
                     $ncore='';
                     $corepair='';
                     $sqmm='';
@@ -172,9 +197,17 @@ include('../includes/header.php');
                            
                         </select>
                     </label>
-        
-                    <label  class="form-label col-lg-3 col-md-6" for="stage">Stage
-                        <select  class="form-select" name="stage" id="stage" required>
+                     
+                    <label  class="form-label col-lg-3 col-md-6" for="type">Type
+                        <select  class="form-select" name="type" id="type" required>
+                            <option disabled selected value=""></option>
+                            <option value="drums">Drums</option>
+                            <option value="material">Material</option>
+                            <option value="other">Others</option>
+                        </select>
+                    </label>
+                    <label  class="form-label col-lg-3 col-md-6 stage" for="stage">Stage
+                        <select  class="form-select" name="stage" id="stage" >
                             <option disabled selected value=""></option>
                             <?php
                             $sql3="SELECT name FROM drum_stage where isDelete=0";
@@ -185,8 +218,44 @@ include('../includes/header.php');
                             <?php } ?>
                         </select>
                     </label>
+                    
+                    <label  class="form-label col-lg-3 col-md-6 material" for="material">Material
+                        <select  class="form-select" name="material" id="material" >
+                            <option disabled selected value=""></option>
+                            <?php
+                            $sql3="SELECT name FROM drum_material where isDelete=0";
+                            $run3=sqlsrv_query($conn,$sql3);
+                            while( $row3=sqlsrv_fetch_array($run3,SQLSRV_FETCH_ASSOC)){
+                            ?>  
+                            <option  ><?php echo $row3['name'] ?></option>                        
+                            <?php } ?>
+                        </select>
+                    </label>
+
+                    <label  class="form-label col-lg-3 col-md-6 other" for="other">Other
+                        <select  class="form-select" name="other" id="other" >
+                            <option disabled selected value=""></option>
+                            <?php
+                            $sql3="SELECT name FROM drum_other where isDelete=0";
+                            $run3=sqlsrv_query($conn,$sql3);
+                            while( $row3=sqlsrv_fetch_array($run3,SQLSRV_FETCH_ASSOC)){
+                            ?>  
+                            <option  ><?php echo $row3['name'] ?></option>                        
+                            <?php } ?>
+                             <!-- <option value="ALUMINIUM SCRAP">ALUMINIUM SCRAP</option>
+                             <option value="COPPER SCRAP">COPPER SCRAP</option>
+                             <option value="INSULATED WIRE SCRAP">INSULATED WIRE SCRAP</option>
+                             <option value="PVC SCRAP">PVC SCRAP</option>
+                             <option value="MACHINARY PART">MACHINARY PART</option>
+                             <option value="MACHINE">MACHINE</option>
+                             <option value="M/S MATERIA">M/S MATERIA</option>   
+                             <option value="Tape">Tape</option>   
+                             <option value="BARE COPPER">BARE COPPER</option>   
+                             <option value="TIN COPPER REEL">TIN COPPER REEL</option> -->
+                        </select>
+                    </label>
                 
-                    <label  class="form-label col-lg-3 col-md-6 hideLabel" for="dseries">Drum Series
+                    <label  class="form-label col-lg-2 col-md-6 hideLabel" for="dseries">Drum Series
                         <select  class="form-select" name="dseries" id="dseries" >
                             <option disabled selected value=""></option>
                             <?php
@@ -204,7 +273,7 @@ include('../includes/header.php');
                     </label>
 
                     <label  class="form-label col-lg-2 col-md-6 hideLabel" for="ncore">No of. Core
-                        <input class="form-control" type="number" id="ncore" name="ncore" value="<?php echo $ncore ?>">
+                        <input step="0.01" class="form-control" type="number" id="ncore" name="ncore" value="<?php echo $ncore ?>">
                     </label>
                     
                     <label  class="form-label col-lg-2 col-md-6 hideLabel" for="corepair">Core/Pair
@@ -212,6 +281,7 @@ include('../includes/header.php');
                             <option value=""></option>
                             <option <?php if($corepair=="core")   { ?> selected <?php } ?> value="core">Core</option>
                             <option <?php if($corepair=="pair")  { ?> selected <?php } ?> value="pair">Pair</option>
+                            <option <?php if($corepair=="filler")  { ?> selected <?php } ?> value="filler">Filler</option>
                         </select>
                     </label>
                     
@@ -222,8 +292,13 @@ include('../includes/header.php');
                     <label  class="form-label col-lg-2 col-md-6 hideLabel" for="ctype">Conductor-Type
                         <select  class="form-select" name="ctype" id="ctype">
                             <option value=""></option>
-                            <option  <?php if($ctype=="cu")   { ?> selected <?php } ?> value="cu">CU</option>
-                            <option  <?php if($ctype=="alu")   { ?> selected <?php } ?> value="alu">ALU</option>
+                            <?php
+                                $sql5="SELECT name FROM drum_conductor where isDelete=0";
+                                $run5=sqlsrv_query($conn,$sql5);
+                                while( $row5=sqlsrv_fetch_array($run5,SQLSRV_FETCH_ASSOC)){
+                                ?>  
+                                <option <?php if($ctype==$row5['name']) { ?> selected <?php } ?> ><?php echo $row5['name'] ?></option>                        
+                            <?php } ?>
                         </select>
                     </label>
                     
@@ -234,17 +309,21 @@ include('../includes/header.php');
                     <label  class="form-label col-lg-3 col-md-6" for="unit">Unit
                         <select  class="form-select" name="unit" id="unit" required>
                             <option value=""></option>
-                            <option  <?php if($unit=="nos")   { ?> selected <?php } ?> value="nos">Nos</option>
-                            <option  <?php if($unit=="mtr")   { ?> selected <?php } ?> value="mtr">Mtr</option>
-                            <option  <?php if($unit=="kg")   { ?> selected <?php } ?>  value="kg">Kg</option>
+                            <option  <?php if($unit=="nos") { ?> selected <?php } ?> value="nos">Nos</option>
+                            <option  <?php if($unit=="mtr") { ?> selected <?php } ?> value="mtr">Mtr</option>
+                            <option  <?php if($unit=="kg") { ?> selected <?php } ?>  value="kg">Kg</option>
                         </select>
                     </label>
                     <label class="form-label col-lg-7 col-md-6" for="rem">Remark
                         <input class="form-control" type="text" id="rem" name="rem" >
                     </label>
-                    <div class="col-lg-2">
-                        <a type="" class="btn  rounded-pill btn-secondary mt-3 float-end" href="drumshift.php">Back</a>
+                    <div class="row">
+                       <div class="col"></div>             
+                        <div class="col-auto">
+                            <a type="" class="btn  rounded-pill btn-secondary mt-3 float-end" href="drumshift.php">Back</a>
                            <button type="submit" class="btn  rounded-pill common-btn me-2 mt-3 float-end"  name="save" >Save</button>
+                        </div>
+                        
                             <!-- <a href="session_destroy.php"  class="btn rounded-pill btn-danger mt-2" name="reset">Reset</a> -->
                         </div>     
                     </div>
@@ -277,7 +356,7 @@ include('../includes/header.php');
                     
                         <?php
                             $sr=1;
-                            $sql="SELECT * FROM Dshift order by id desc ";
+                            $sql="SELECT * FROM Dshift order by Date desc, id DESC";
                             $run=sqlsrv_query($conn,$sql);
                             
                             while($row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC)){
@@ -313,6 +392,11 @@ include('../includes/header.php');
 <script>
      $('#dshift').addClass('active');
 
+     $(document).on('click','.getexcel',function(){
+    var mon=$('#month').val();
+    console.log(mon);
+     })
+
      $(document).ready(function(){
 		var table = $('#drumTable').DataTable({   // initializes a DataTable using the DataTables library 
 		    "processing": true,                  //This option enables the processing indicator to be shown while the table is being processed
@@ -322,8 +406,8 @@ include('../includes/header.php');
                                                 //the previous instance should be destroyed. This is useful when you need to re-create the table dynamically.
             
 		 	lengthMenu: [
-            	[ 10, 50, -1 ],
-            	[ '10 rows','50 rows','Show all' ]
+            	[ 15, 25, -1 ],
+            	[ '15 rows','25 rows','Show all' ]
         	],
 			 buttons: [
 		 		'pageLength','copy', 'excel'
@@ -356,14 +440,48 @@ include('../includes/header.php');
         $(document).on('change','#stage',function(){
             var stage = $(this).val();
             var stg = stage.split(' ');
-            if(stg[1] == 'DRUMS'){
+            if(stg[1] == 'DRUMS' || stg[2] == 'DRUMS'){
                 $('.hideLabel').show();
             }else{
                 $('.hideLabel').hide();
             }
+
+            if(stage == 'DUMMY CORE DRUMS'){
+                $('#corepair').val('filler');
+                $('#ctype').val('PVC FILLER');
+            }
         });
 
-    
+        $(document).on('change','#type',function(){
+            var type = $(this).val();
+            if(type=='drums'){
+                $('.stage').show();
+                $('.material').hide();
+                $('.other').hide();
+                $('.hideLabel').show();
+
+
+            }
+            if(type=='material'){
+                $('.stage').hide();
+                $('.material').show();
+                $('.other').hide();
+                $('.hideLabel').hide();
+
+            }
+            if(type=='other'){
+                $('.stage').hide();
+                $('.material').hide();
+                $('.other').show();
+                $('.hideLabel').hide();
+
+            }
+
+
+
+        })
+
+        //for plant selection
         $(document).on('change','#fplant',function(){
             var fplant = $(this).val();
             if(fplant == '1701'){
@@ -377,34 +495,7 @@ include('../includes/header.php');
 
 
 
-    //automatically select tplant on basis of tplant
-        // Get the select elements
-        // const fplantSelect = document.getElementById("fplant");
-        // const tplantSelect = document.getElementById("tplant");
-
-        // // Add an event listener to the "From-Plant" select
-        // fplantSelect.addEventListener("change", function() {
-        //     // Get the selected value
-        //     const selectedValue = fplantSelect.value;
-
-        // // Clear the "To-Plant" select
-        // tplantSelect.innerHTML = '';
-        
-
-        // // Add options to the "To-Plant" select based on the selected "From-Plant"
-        // if (selectedValue === "1701") {
-        //      tplantSelect.options.add(new Option("2205", "2205", true, true)); // Automatically selected
-        //      tplantSelect.options.add(new Option("1701", "1701"));
-        // } else if (selectedValue === "2205") {
-        //     tplantSelect.options.add(new Option("1701", "1701", true, true)); // Automatically selected
-        //     tplantSelect.options.add(new Option("2205", "2205"));
-        // }
-        // else if(selectedValue === "Shaed 2106"){
-        //     tplantSelect.options.add(new Option("1701", "1701", true, true)); // Automatically selected
-        //     tplantSelect.options.add(new Option("2205", "2205"));  
-        //     tplantSelect.options.add(new Option("Shaed 2106", "Shaed 2106"));  
-        // }
-        // });  
+  
  
 </script>
 <?php

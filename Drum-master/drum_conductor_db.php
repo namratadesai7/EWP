@@ -7,7 +7,7 @@ include('../includes/dbcon.php');
 
 // Add Conductor
 if (isset($_POST['submit'])) {
-    $name = $_POST['name'];
+    $name = strtoupper($_POST['name']);
 
     $query = "SELECT MAX(id) as id FROM drum_conductor";
     $connect = sqlsrv_query($conn, $query);

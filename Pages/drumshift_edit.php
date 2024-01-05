@@ -119,8 +119,17 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                            ?>
                         </select>
                     </label>
+
+                    <label  class="form-label col-lg-3 col-md-6" for="type">Type
+                        <select  class="form-select" name="type" id="type" required>
+                            <option disabled selected value=""></option>
+                            <option <?php if($row['Type']=="drums") {?> selected <?php }  ?> value="drums">Drums</option>
+                            <option <?php if($row['Type']=="material") {?> selected <?php }  ?> value="material">Material</option>
+                            <option <?php if($row['Type']=="other") {?> selected <?php }  ?> value="other">Others</option>
+                        </select>
+                    </label>
                     
-                    <label  class="form-label  col-lg-3 col-md-6" for="stage">Stage
+                    <label  class="form-label  col-lg-3 col-md-6 stage" for="stage">Stage
                         <select  class="form-select" name="stage" id="stage" >
                             <option value=""></option>
                             <?php
@@ -134,7 +143,33 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                         </select>
                     </label>
 
-                    <label  class="form-label  col-lg-3 col-md-6" for="dseries">Drum Series
+                    <label  class="form-label col-lg-3 col-md-6 material" for="material">Material
+                        <select  class="form-select" name="material" id="material" >
+                            <option disabled selected value=""></option>
+                            <?php
+                            $sql3="SELECT name FROM drum_material where isDelete=0";
+                            $run3=sqlsrv_query($conn,$sql3);
+                            while( $row3=sqlsrv_fetch_array($run3,SQLSRV_FETCH_ASSOC)){
+                            ?>  
+                            <option  <?php if($row['Material'] == $row3['name']) { ?> selected <?php } ?> ><?php echo $row3['name'] ?> </option>                        
+                            <?php } ?>
+                        </select>
+                    </label>
+
+                    <label  class="form-label col-lg-3 col-md-6 other" for="other">Other
+                        <select  class="form-select" name="other" id="other" >
+                            <option disabled selected value=""></option>
+                            <?php
+                            $sql3="SELECT name FROM drum_other where isDelete=0";
+                            $run3=sqlsrv_query($conn,$sql3);
+                            while( $row3=sqlsrv_fetch_array($run3,SQLSRV_FETCH_ASSOC)){
+                            ?>  
+                            <option <?php if($row['Others'] == $row3['name']) { ?> selected <?php } ?> ><?php echo $row3['name'] ?></option>                        
+                            <?php } ?>
+                        </select>
+                    </label>
+
+                    <label  class="form-label  col-lg-3 col-md-6 hideLabel" for="dseries">Drum Series
                         <select  class="form-select" name="dseries" id="dseries" >
                             <option value=""></option>
                             <?php
@@ -148,15 +183,15 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                         </select>
                     </label>
                     
-                    <label class="form-label  col-lg-3 col-md-6" for="dnum">Drum No.
+                    <label class="form-label  col-lg-3 col-md-6 hideLabel" for="dnum">Drum No.
                         <input class="form-control" type="number" id="dnum" name="dnum" value="<?php echo $row['Drum_No'] ?>">
                     </label>
                 
-                    <label  class="form-label  col-lg-3 col-md-6" for="ncore">No of. Core
-                        <input class="form-control" type="number" id="ncore" name="ncore" value="<?php echo $row['No_of_core'] ?>">
+                    <label  class="form-label  col-lg-3 col-md-6 hideLabel" for="ncore">No of. Core
+                        <input step="0.01" class="form-control" type="number" id="ncore" name="ncore" value="<?php echo $row['No_of_core'] ?>">
                     </label>
                     
-                    <label  class="form-label  col-lg-3 col-md-6" for="corepair">Core/Pair
+                    <label  class="form-label  col-lg-3 col-md-6 hideLabel" for="corepair">Core/Pair
                         <select  class="form-select" name="corepair" id="corepair" >
                             <option value=""></option>
                             <option  <?php if($row['corepair']=="core")    { ?> selected   <?php } ?> value="core" >Core</option>
@@ -164,12 +199,12 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                         </select>
                     </label>
                     
-                    <label  class="form-label  col-lg-3 col-md-6" for="sqmm">Sqmm
+                    <label  class="form-label  col-lg-3 col-md-6 hideLabel" for="sqmm">Sqmm
                         <input class="form-control" type="number" id="sqmm" name="sqmm" value="<?php echo $row['Sqmm'] ?>">
                     </label>
 
                     
-                    <label  class="form-label  col-lg-3 col-md-6" for="ctype">Conductor-Type
+                    <label  class="form-label  col-lg-3 col-md-6 hideLabel" for="ctype">Conductor-Type
                         <select  class="form-select" name="ctype" id="ctype" >
                             <option value=""></option>
                             <option <?php if($row['ConductorType']=="cu")   { ?> selected   <?php } ?>  value="cu" >CU</option>
@@ -230,33 +265,107 @@ include('../includes/footer.php');
         document.getElementById('date').setAttribute("max", today);
         document.getElementById('date').setAttribute("min", last);
 
+        //for plant selection
+        $(document).on('change','#fplant',function(){
+            var fplant = $(this).val();
+            if(fplant == '1701'){
+                $('#tplant').val(2205);
+            }else if (fplant == "2205") {
+                $('#tplant').val(1701);
+            }else{
+                $('#tplant').val('');
+            }
+        });
+
+        $(document).ready(function(){
+            var type = $('#type').val();
+            if(type=='drums'){
+                $('.stage').show();
+                $('.material').hide();
+                $('.other').hide();
+
+            }
+            if(type=='material'){
+                $('.stage').hide();
+                $('.material').show();
+                $('.other').hide();
+                $('.hideLabel').hide();
+
+            }
+            if(type=='other'){
+                $('.stage').hide();
+                $('.material').hide();
+                $('.other').show();
+                $('.hideLabel').hide();
+
+            }
+        })
+
+        $(document).on('change','#type',function(){
+            var type = $(this).val();
+            if(type=='drums'){
+                $('.stage').show();
+                $('.material').hide();
+                $('.other').hide();
+                $('.hideLabel').show();
+
+            }
+            if(type=='material'){
+                $('.stage').hide();
+                $('.material').show();
+                $('.other').hide();
+                $('.hideLabel').hide();
+
+            }
+            if(type=='other'){
+                $('.stage').hide();
+                $('.material').hide();
+                $('.other').show();
+                $('.hideLabel').hide();
+
+            }
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //automatically select tplant on basis of tplant
         // Get the select elements
-        const fplantSelect = document.getElementById("fplant");
-        const tplantSelect = document.getElementById("tplant");
+        // const fplantSelect = document.getElementById("fplant");
+        // const tplantSelect = document.getElementById("tplant");
 
-        // Add an event listener to the "From-Plant" select
-        fplantSelect.addEventListener("change", function() {
-            // Get the selected value
-            const selectedValue = fplantSelect.value;
+        // // Add an event listener to the "From-Plant" select
+        // fplantSelect.addEventListener("change", function() {
+        //     // Get the selected value
+        //     const selectedValue = fplantSelect.value;
 
-        // Clear the "To-Plant" select
-        tplantSelect.innerHTML = '';
+        // // Clear the "To-Plant" select
+        // tplantSelect.innerHTML = '';
 
-        // Add options to the "To-Plant" select based on the selected "From-Plant"
-        if (selectedValue === "1701") {
-             tplantSelect.options.add(new Option("2205", "2205", true, true)); // Automatically selected
-             tplantSelect.options.add(new Option("1701", "1701"));
-        } else if (selectedValue === "2205") {
-            tplantSelect.options.add(new Option("1701", "1701", true, true)); // Automatically selected
-            tplantSelect.options.add(new Option("2205", "2205"));
-        }
-        else if(selectedValue === "Shaed 2106"){
-            tplantSelect.options.add(new Option("1701", "1701", true, true)); // Automatically selected
-            tplantSelect.options.add(new Option("2205", "2205"));  
-            tplantSelect.options.add(new Option("Shaed 2106", "Shaed 2106"));  
-        }
-        });  
+        // // Add options to the "To-Plant" select based on the selected "From-Plant"
+        // if (selectedValue === "1701") {
+        //      tplantSelect.options.add(new Option("2205", "2205", true, true)); // Automatically selected
+        //      tplantSelect.options.add(new Option("1701", "1701"));
+        // } else if (selectedValue === "2205") {
+        //     tplantSelect.options.add(new Option("1701", "1701", true, true)); // Automatically selected
+        //     tplantSelect.options.add(new Option("2205", "2205"));
+        // }
+        // else if(selectedValue === "Shaed 2106"){
+        //     tplantSelect.options.add(new Option("1701", "1701", true, true)); // Automatically selected
+        //     tplantSelect.options.add(new Option("2205", "2205"));  
+        //     tplantSelect.options.add(new Option("Shaed 2106", "Shaed 2106"));  
+        // }
+        // });  
  
 </script>
 
