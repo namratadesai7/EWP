@@ -64,6 +64,7 @@ $result = sqlsrv_query($conn, $sql);
                     <tr class="bg-light">
                         <th>Sr</th>
                         <th>Unit</th>
+                        <th>Rate</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -77,7 +78,11 @@ $result = sqlsrv_query($conn, $sql);
                                 <?php echo $row['name'] ?>
                             </td>
                             <td>
-                                <button data-name="<?php echo $row['name'] ?>" id=<?php echo $row['id'] ?>
+                                <?php echo $row['rate'] ?>
+                            </td>
+                            <td>
+                                <button data-name="<?php echo $row['name'] ?>"  data-rate="<?php echo $row['rate'] ?>"
+                                id=<?php echo $row['id'] ?>
                                     class="edit btn btn-primary btn-sm" >Edit</button>
                                 <a href="drum_other_db.php?deleteid=<?php echo $row['id'] ?>"
                                     onclick="return confirm('Are you sure?')" name="delete"
@@ -101,8 +106,12 @@ $result = sqlsrv_query($conn, $sql);
                 </div>
                 <form class="modal-body" id="addForm" action="drum_other_db.php" method="post">
                     <div class="mb-3">
-                        <label for="name">Unit</label>
+                        <label for="name">Others</label>
                         <input type="text" name="name" id="name" placeholder="Enter Unit" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rate">Rate</label>
+                        <input type="number" name="rate" id="rate" placeholder="Enter Rate" class="form-control" required>
                     </div>
 
                 </form>
@@ -123,8 +132,12 @@ $result = sqlsrv_query($conn, $sql);
                 <form class="modal-body" id="editForm" action="drum_other_db.php" method="post">
                     <input type="hidden" id="editId" name="editId">
                     <div class="mb-3">
-                        <label for="name">Unit</label>
+                        <label for="name">Others</label>
                         <input type="text" name="editName" id="editName" placeholder="Enter Unit" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rate">Rate</label>
+                        <input type="number" id="editRate" name="editRate" class="form-control" required>
                     </div>
 
                 </form>
@@ -143,8 +156,10 @@ $result = sqlsrv_query($conn, $sql);
     $(document).on('click', '.edit', function () {
         var editid = $(this).attr('id');
         var name = $(this).data('name');
+        var rate = $(this).data('rate');
         $('#editId').val(editid);
         $('#editName').val(name);
+        $('#editRate').val(rate);
         $('#editModal').modal('show');
     });
 </script>

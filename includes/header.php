@@ -137,11 +137,11 @@ include('dbcon.php');
                         <a href="../Drum-master/drum_name.php" class="sub-item" id="dName">1. &nbsp; Name</a>
                         <a href="../Drum-master/drum_plant.php" class="sub-item" id="dPlant">2. &nbsp;Plant</a>
                         <a href="../Drum-master/drum_series.php" class="sub-item" id="dSeries">3. &nbsp;Drum Series</a>
-                        <a href="../Drum-master/drum_conductor.php" class="sub-item" id="dConductor">4. &nbsp;Conductor</a>
-                        <a href="../Drum-master/drum_stage.php" class="sub-item" id="dStage">5. &nbsp;Stage</a>
-                        <a href="../Drum-master/drum_material.php" class="sub-item" id="dmat">5. &nbsp;Material</a>
+                        <a href="../Drum-master/drum_material.php" class="sub-item" id="dmat">4. &nbsp;Material</a>
                         <a href="../Drum-master/drum_other.php" class="sub-item" id="other">5. &nbsp;Other</a>
-                        <a href="../Drum-master/drum_unit.php" class="sub-item" id="dUnit">6. &nbsp;Unit</a>
+                        <a href="../Drum-master/drum_conductor.php" class="sub-item" id="dConductor">6. &nbsp;Conductor</a>
+                        <a href="../Drum-master/drum_stage.php" class="sub-item" id="dStage">7. &nbsp;Stage</a>                      
+                        <a href="../Drum-master/drum_unit.php" class="sub-item" id="dUnit">8. &nbsp;Unit</a>
                     </div>
                 </li>
                 <li>

@@ -8,13 +8,14 @@ include('../includes/dbcon.php');
 // Add Stage data in Database
 if (isset($_POST['submit'])) {
     $name = strtoupper($_POST['name']);
+    $rate = $_POST['rate'];
 
     $query = "SELECT MAX(id) as id from drum_other";
     $connect = sqlsrv_query($conn, $query);
     $crow = sqlsrv_fetch_array($connect, SQLSRV_FETCH_ASSOC);
     $id = $crow['id'] + 1;
 
-    $sql = "INSERT into drum_other (id,name,isDelete,createdBy) values ('$id', '$name','0','$user')";
+    $sql = "INSERT into drum_other (id,name,rate,isDelete,createdBy) values ('$id', '$name','$rate','0','$user')";
     $result = sqlsrv_query($conn, $sql);
 
     if ($result) {
@@ -43,7 +44,8 @@ if (isset($_GET['deleteid'])) {
 if (isset($_POST['update'])) {
     $editName = $_POST['editName'];
     $editId = $_POST['editId'];
-    $sql = "UPDATE drum_other SET name='$editName', updatedBy='$user' , updatedAt='$cur_date' where id='$editId'";
+    $editRate = $_POST['editRate'];
+    $sql = "UPDATE drum_other SET name='$editName',rate='$editRate', updatedBy='$user' , updatedAt='$cur_date' where id='$editId'";
 
     $result = sqlsrv_query($conn, $sql);
     if ($result) {

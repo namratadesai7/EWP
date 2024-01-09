@@ -175,6 +175,46 @@ $year = date('Y', strtotime("$month-01"));
             </div>
         </div>
 
+        <tr class="head"> 
+             <td class="text-center"  colspan="5"> <b>B. SHIFTING(OTHERS) MATERIAL MONTH OF <?php  echo date('F-Y',strtotime($month))  ?></b> </td>  
+        </tr>
+       <tr  class="bg-secondary text-light">
+            <th>MATERIALS</th>
+            <th>QTY</th>
+            <th>FINAL QTY</th>
+            <th>RATE</th>
+            <th>AMOUNT</th>
+       </tr>
+       <?php
+        $sql9="SELECT DISTINCT(total_qnty),total_amt,CAT,type,qnty,rate,amt,final_qnty,id  FROM summary WHERE contrator='$contractor' AND month='$month' AND CAT='others' AND isdelete=0";
+        $run9=sqlsrv_query($conn,$sql9);
+       
+        while($row9=sqlsrv_fetch_array($run9,SQLSRV_FETCH_ASSOC)){
+            $btqty=$row9['total_qnty'];
+            $btamt=$row9['total_amt'];
+    ?>
+            <th>
+                <input type="text" class="dmat"  name="type[]" autocomplete="off" value="<?php echo $row9['type']?>">
+                <input type="hidden" name="cat[]" class="cat"  value=<?php  echo $row9['CAT'] ?>>
+                <input type="hidden" name="id[]" class="id"  value=<?php echo $row9['id']   ?>>
+                <input type="hidden" name="remark[]"  class="remark">
+            </th>
+            <td><input type="number" class="dqty" name="qty[]" step="0.01" value="<?php echo $row9['qnty'] ?>" autocomplete="off"></td>
+            <td><input type="number" class="dfqty"  name="fqty[]"  step="0.01"  value="<?php echo $row9['final_qnty'] ?>"></td>
+            <td><input type="number" class="drate"  name="rate[]" step="0.01"  value="<?php echo $row9['rate'] ?>" ></td>
+            <td><input type="number" class="damt"  name="amt[]" step="0.01"  value="<?php echo $row9['amt']    ?>"></td>
+        </tr>
+       <?php  }
+      
+?>
+        <tr >
+            <td colspan="2"></td>
+            <td class="totcol"> <input type="number"  id="dtqty" name="dtqty" class="tqty" value="<?php echo $btqty ?>" readonly></td>
+            <td></td>
+            <td class="totcol"><input type="number" id="dtamt" name="dtamt" class="tamt3" value="<?php echo $btamt ?>" readonly></td>
+        </tr> 
+
+
        <tr class="head"> 
              <td class="text-center"  colspan="5"> <b>B. SHIFTING MATERIAL MONTH OF <?php  echo date('F-Y',strtotime($month))  ?></b> </td>  
         </tr>
@@ -213,6 +253,8 @@ $year = date('Y', strtotime("$month-01"));
             <td></td>
             <td class="totcol"><input type="number" id="btamt" name="btamt" class="tamt1" value="<?php echo $btamt ?>" readonly></td>
         </tr> 
+
+
         <tr class="head">
             <td class="text-center"  colspan="5"><b>PURCHASE MATERIALS (UNLOADING) MONTH OF <?php  echo date('F-Y',strtotime($month))  ?> </b> </td>  
         </tr>
@@ -561,8 +603,9 @@ include('../includes/footer.php');
         var tamt1 = parseFloat($(".tamt").val());
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
-        $(".total").val((tamt1 + tamt2 + tamt3).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3).toFixed(2));
+        var tamt4 = parseFloat($(".tamt3").val());
+        $(".total").val((tamt1 + tamt2 + tamt3 + tamt4).toFixed(2));
+        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
         let totalSum1 = 0;
         
         $('.tamount').each(function () {
@@ -575,6 +618,52 @@ include('../includes/footer.php');
         // Display the total sum
         $('#grandtotal').val(totalSum1.toFixed(2));
       //  $("#grandtotal").val((tamt1 + tamt2 + tamt3).toFixed(2));
+    
+    });
+
+    $(document).on("change",".dfqty,.drate",function(){
+        var amt = 0;
+        var totalSum= 0;
+        var rate = $(this).closest('tr').find('.drate').val();
+        var qty = $(this).closest('tr').find('.dfqty').val(); 
+        $(this).closest('tr').find('.damt').val((rate*qty).toFixed(2));
+
+        $('.dfqty').each(function () {
+                const value = parseFloat($(this).val());
+             
+                if (!isNaN(value)) {
+                    totalSum += value;
+                } 
+            });
+            // Display the total sum
+            $('#dtqty').val(totalSum.toFixed(2));
+
+        $('.damt').each(function () {
+            const value= parseFloat($(this).val());
+            if (!isNaN(value)) {
+                amt += value;
+            }
+            });
+         
+        $(".tamt3").val(amt.toFixed(2));   
+        var tamt1 = parseFloat($(".tamt").val());
+        var tamt2 = parseFloat($(".tamt1").val());
+        var tamt3 = parseFloat($(".tamt2").val());
+        var tamt4 = parseFloat($(".tamt3").val());
+        $(".total").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        let totalSum1 = 0;
+        
+        $('.tamount').each(function () {
+            const value = parseFloat($(this).val());
+            
+            if (!isNaN(value)) {
+                totalSum1 += value;
+            } 
+        });
+        // Display the total sum
+        $('#grandtotal').val(totalSum1.toFixed(2));
+       // $("#grandtotal").val((tamt1 + tamt2 + tamt3).toFixed(2));
     
     });
     
@@ -606,8 +695,9 @@ include('../includes/footer.php');
         var tamt1 = parseFloat($(".tamt").val());
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
-        $(".total").val((tamt1 + tamt2 + tamt3).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3).toFixed(2));
+        var tamt4 = parseFloat($(".tamt3").val());
+        $(".total").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
         let totalSum1 = 0;
         
         $('.tamount').each(function () {
@@ -651,8 +741,9 @@ include('../includes/footer.php');
         var tamt1 = parseFloat($(".tamt").val());
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
-        $(".total").val((tamt1 + tamt2 + tamt3).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3).toFixed(2));
+        var tamt4 = parseFloat($(".tamt3").val());
+        $(".total").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
         let totalSum1 = 0;
         
         $('.tamount').each(function () {
@@ -697,8 +788,9 @@ include('../includes/footer.php');
         var tamt1 = parseFloat($(".tamt").val());
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
-        $(".total").val((tamt1 + tamt2 + tamt3).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3).toFixed(2));
+        var tamt4 = parseFloat($(".tamt3").val());
+        $(".total").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
         let totalSum = 0;
         
         $('.tamount').each(function () {
@@ -749,22 +841,22 @@ include('../includes/footer.php');
           });
 
         //when we click completed button  
-        $(document).on('click','.completed',function(){
+    $(document).on('click','.completed',function(){
 
-            var mon= $('.mon').val();
-            var id = $('#temp').val();           
-            
-            $.ajax({
-                url:'summary_pmatcomp_modal.php',
-                type: 'post',
-                data: {mon:mon,pmat:selectedPmat,id:id},  
-                // dataType: 'json',
-                success:function(data){
-                $('#bbb').html(data);  
-                //$('#pmat').modal('show');
-                }
-            });
+        var mon= $('.mon').val();
+        var id = $('#temp').val();           
+        
+        $.ajax({
+            url:'summary_pmatcomp_modal.php',
+            type: 'post',
+            data: {mon:mon,pmat:selectedPmat,id:id},  
+            // dataType: 'json',
+            success:function(data){
+            $('#bbb').html(data);  
+            //$('#pmat').modal('show');
+            }
         });
+    });
 
         //when we click on add button    
         $(document).on('click','.add',function(){

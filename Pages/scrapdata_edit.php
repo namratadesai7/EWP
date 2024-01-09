@@ -16,6 +16,7 @@ if($id!=''){
 }
 $run=sqlsrv_query($conn,$sql);
 $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -117,11 +118,13 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                         <select  class="form-select" name="tname" id="tname" value="<?php echo $row['Teamname'] ?? '' ?>"  required>
                             <option disabled selected value="">--Select--</option>
                             <?php
-                            $sql1="SELECT name FROM scrap_team";
+                            $sql1="SELECT name FROM scrap_team where isDelete=0";
                             $run1=sqlsrv_query($conn,$sql1);
                             while($row1=sqlsrv_fetch_array($run1,SQLSRV_FETCH_ASSOC)){
+                      
                             ?>
-                            <option <?php if($row['Teamname'] ?? ''==$row1['name']) { ?> selected <?php } ?> > <?php echo $row1['name'] ?> </option>
+                            
+                            <option <?php if($row['Teamname']==$row1['name']) { ?> selected <?php } ?> > <?php echo $row1['name'] ?> </option>
                             <?php
                             } ?>  
                         </select>

@@ -1,7 +1,8 @@
 <?php
 include('../includes/dbcon.php');
 include('../includes/header.php');  
-
+$mon=date('m');
+$year=date('Y');
 ?>
 
 <!DOCTYPE html>
@@ -160,7 +161,7 @@ include('../includes/header.php');
                     </label>
                     
                     <label class="form-label col-lg-3 col-md-6" for="name">Name
-                        <select  class="form-select" name="name" id="name" >
+                        <select  class="form-select" name="name" id="name"  required>
                             <option disabled selected value=""></option>
                             <?php
                              $sql1="SELECT name FROM drum_name where isDelete=0";
@@ -172,7 +173,7 @@ include('../includes/header.php');
                         </select>
                     </label>
                     <label  class="form-label col-lg-3 col-md-6" for="fplant">From-Plant
-                        <select  class="form-select" name="fplant" id="fplant" >
+                        <select  class="form-select" name="fplant" id="fplant"  required>
                             <option disabled selected value="" ></option>
                             <?php
                              $sql2="SELECT name FROM drum_plant where isDelete=0";
@@ -185,7 +186,7 @@ include('../includes/header.php');
                     </label>
                 
                     <label  class="form-label col-lg-3 col-md-6" for="tplant">To-Plant
-                        <select  class="form-select" name="tplant" id="tplant" >
+                        <select  class="form-select" name="tplant" id="tplant" required  >
                             <option disabled selected value=""></option>
                             <?php
                             $sql2="SELECT name FROM drum_plant where isDelete=0";
@@ -194,12 +195,11 @@ include('../includes/header.php');
                             ?>  
                             <option <?php if($tplant==$row2['name'] )   { ?> selected <?php } ?> ><?php echo $row2['name']   ?></option>
                             <?php } ?>
-                           
                         </select>
                     </label>
                      
                     <label  class="form-label col-lg-3 col-md-6" for="type">Type
-                        <select  class="form-select" name="type" id="type" required>
+                        <select  class="form-select" name="type" id="type" required  onchange="toggleRequired()">>
                             <option disabled selected value=""></option>
                             <option value="drums">Drums</option>
                             <option value="material">Material</option>
@@ -207,7 +207,7 @@ include('../includes/header.php');
                         </select>
                     </label>
                     <label  class="form-label col-lg-3 col-md-6 stage" for="stage">Stage
-                        <select  class="form-select" name="stage" id="stage" >
+                        <select  class="form-select" name="stage" id="stage" required>
                             <option disabled selected value=""></option>
                             <?php
                             $sql3="SELECT name FROM drum_stage where isDelete=0";
@@ -220,7 +220,7 @@ include('../includes/header.php');
                     </label>
                     
                     <label  class="form-label col-lg-3 col-md-6 material" for="material">Material
-                        <select  class="form-select" name="material" id="material" >
+                        <select  class="form-select" name="material" id="material" required >
                             <option disabled selected value=""></option>
                             <?php
                             $sql3="SELECT name FROM drum_material where isDelete=0";
@@ -232,9 +232,9 @@ include('../includes/header.php');
                         </select>
                     </label>
 
-                    <label  class="form-label col-lg-3 col-md-6 other" for="other">Other
-                        <select  class="form-select" name="other" id="other" >
-                            <option disabled selected value=""></option>
+                    <label  class="form-label col-lg-3 col-md-6 other" for="other" >Other
+                        <select  class="form-select" id="other"  name="other" required>
+                         
                             <?php
                             $sql3="SELECT name FROM drum_other where isDelete=0";
                             $run3=sqlsrv_query($conn,$sql3);
@@ -256,7 +256,7 @@ include('../includes/header.php');
                     </label>
                 
                     <label  class="form-label col-lg-2 col-md-6 hideLabel" for="dseries">Drum Series
-                        <select  class="form-select" name="dseries" id="dseries" >
+                        <select  class="form-select" name="dseries" id="dseries" required >
                             <option disabled selected value=""></option>
                             <?php
                             $sql3="SELECT name FROM drum_series where isDelete=0";
@@ -329,8 +329,9 @@ include('../includes/header.php');
                     </div>
                 </div> <br>       
             </form>
-        
-        <div class="divCss ">
+     
+        <div class="divCss " id="putTable">
+        <div id="spinLoader"></div>
             <table class="table table-bordered text-center table-striped table-hover mb-0" id="drumTable">
                 <thead>
                     <tr class="bg-secondary text-light">
@@ -340,6 +341,7 @@ include('../includes/header.php');
                         <th>Name</th>
                         <th>From Plant</th>
                         <th>To Plant </th>
+                        <th>Type</th>
                         <th>Drum Series</th>
                         <th>Drum No.</th>
                         <!-- <th>Stage</th>
@@ -356,7 +358,7 @@ include('../includes/header.php');
                     
                         <?php
                             $sr=1;
-                            $sql="SELECT * FROM Dshift order by Date desc, id DESC";
+                            $sql="SELECT * FROM Dshift WHERE  format(Date,'MM')='$mon' and format(Date,'yyyy')='$year' order by Date desc, id DESC";
                             $run=sqlsrv_query($conn,$sql);
                             
                             while($row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC)){
@@ -368,6 +370,7 @@ include('../includes/header.php');
                                 <td><?php echo $row['Name']  ?></td>
                                 <td><?php echo $row['From_Plant']  ?></td>
                                 <td><?php echo $row['To_Plant']  ?></td>
+                                <td><?php echo $row['Type'] ?></td>
                                 <td><?php echo $row['Drum_series']  ?></td>
                                 <td><?php echo $row['Drum_No']  ?></td>
                                 <!-- <td><?php echo $row['Stage']  ?></td>
@@ -386,11 +389,15 @@ include('../includes/header.php');
             </table>
         </div>
         
+        
     </div>
 </body>
 </html>
 <script>
-     $('#dshift').addClass('active');
+    $('#dshift').addClass('active');
+
+
+
 
      $(document).on('click','.getexcel',function(){
     var mon=$('#month').val();
@@ -410,10 +417,55 @@ include('../includes/header.php');
             	[ '15 rows','25 rows','Show all' ]
         	],
 			 buttons: [
-		 		'pageLength','copy', 'excel'
+		 		'pageLength','copy', 'excel',
+                 {
+                    text:'ViewAll', className:'viewall',
+                    action:function(){
+                        $('#spinLoader').html('<span class="spinner-border spinner-border-lg mx-2"></span><p>Loading..</p>');
+                        $('#putTable').css({"opacity":"0.5"});
+
+                        $.ajax({
+                            url:'drumshift_view.php',
+                            type:'post',
+                            data:{ },
+                            success:function(data){
+                                $('#putTable').html(data);
+                                $('#spinLoader').html('');
+                                $('#putTable').css({"opacity":"1"});
+                            }
+                        });
+                    }
+                },
         	]
     	});
  	});
+
+    // for making stage/material/other required.
+     function toggleRequired() {
+        console.log("sds");
+        var typeSelect = document.getElementById("type");
+        var stageSelect = document.getElementById("stage");
+        var materialSelect = document.getElementById("material");
+    
+        var dseriesSelect = document.getElementById("dseries");
+
+        if (typeSelect.value === "drums") {
+            stageSelect.required = true;
+            materialSelect.required = false;
+ 
+            dseriesSelect.required= true;
+        } else if (typeSelect.value === "material") {
+            stageSelect.required = false;
+            materialSelect.required = true;
+ 
+            dseriesSelect.required= false;
+        } else {
+            stageSelect.required = false;
+            materialSelect.required = false;
+        
+            dseriesSelect.required= false;
+        }
+    }
 
      //disable dates
      var today= new Date();

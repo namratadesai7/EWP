@@ -4,6 +4,7 @@ include('../includes/header.php');
 $mon=date('F');
 $year=date('Y');
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -179,19 +180,17 @@ $year=date('Y');
             // Now you can send the monthName through AJAX
             console.log(year);
             $.ajax({
-                    url: 'scrap_table.php', // Create a new PHP file for checking if the record exists
-                    type: 'post',
-                    data: {
-                       month:monthName,year:year
-                    },
-                    success: function (data) {
-                       $('#showdata').html(data)
-                    },
-                    error: function (res) {
-                    }
-                });
-
-
+                url: 'scrap_table.php', // Create a new PHP file for checking if the record exists
+                type: 'post',
+                data: {
+                    month:monthName,year:year
+                },
+                success: function (data) {
+                    $('#showdata').html(data)
+                },
+                error: function (res) {
+                }
+            });
      })
 
      $(document).ready(function(){

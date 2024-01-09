@@ -9,6 +9,8 @@ if(isset($_POST['month'])){
     $year = date('Y', strtotime($month));
     $mon = date('F', strtotime("$month-01"));
 
+   
+
 ?>
 <div>
     <style>
@@ -94,8 +96,8 @@ if(isset($_POST['month'])){
     <table class="table table-bordered text-center" id="summtable">
         <tr class="head">
             <td class="text-center" colspan="5"><b> A. SHIFTING MATERIAL MONTH OF <?php echo date('F-Y',strtotime($month)) ?></b> </td>  
-       </tr>
-       <tr class="bg-secondary text-light">
+        </tr>
+        <tr class="bg-secondary text-light">
             <th>DRUMS</th>
             <th>QTY</th>
             <th></th>
@@ -150,6 +152,50 @@ if(isset($_POST['month'])){
             <td  class="totcol"><input type="number" id="atamt"  name="atamt" class="tamt" value="0" readonly></td>
        </tr> 
        <tr class="head"> 
+             <td class="text-center "  colspan="5"> <b>B. SHIFTING(OTHER) MATERIAL MONTH OF <?php echo date('F-Y',strtotime($month)) ?></b> </td>  
+        </tr>
+
+       <tr class="bg-secondary text-light">
+            <th>MATERIALS</th>
+            <th>QTY</th>
+            <th>FINAL QTY</th>
+            <th>RATE</th>
+            <th>AMOUNT</th>
+       </tr>
+       <?php   
+     
+            $sql11="SELECT name,rate FROM  drum_other WHERE isDelete=0 ";
+            $run11=sqlsrv_query($conn,$sql11);
+            while($row11=sqlsrv_fetch_array($run11,SQLSRV_FETCH_ASSOC)) { ?>
+        <tr>
+            <th><input type="text" class="dmat"  name="type[]" autocomplete="off" value="<?php echo $row11['name'] ?>">
+                <input type="hidden" name="cat[]" class="cat"  value="others">
+                <input type="hidden" name="remark[]"  class="remark">
+                <?php 
+            $sql12="SELECT count(Drum_No) as cn FROM Dshift WHERE format(Date,'yyyy-MM')='$month' AND Others='".$row11['name'] ."' "; 
+            $run12=sqlsrv_query($conn,$sql12);
+            $row12=sqlsrv_fetch_array($run12,SQLSRV_FETCH_ASSOC);
+            ?>
+          
+            </th>
+            <td><input type="text" class="dqty"  name="qty[]" step="0.01"  autocomplete="off"></td>
+            <td><input type="number" class="dfqty"  name="fqty[]" step="0.01"  value="<?php echo $row12['cn'] ?>" autocomplete="off"></td>
+            <td><input type="number" class="drate"  name="rate[]" step="0.01" value="<?php echo $row11['rate']  ?>" ></td>
+            <td><input type="number" class="damt"  name="amt[]" step="0.01"  value="<?php echo $row11['rate'] *$row12['cn']  ?>" readonly></td>
+        </tr>
+       <?php 
+        }
+      
+        ?>
+        <tr>
+            <td colspan="2"></td>
+            <td class="totcol"><input type="number"  id="dtqty" name="dtqty" class="tqty" value="0" readonly></td>
+            <td></td>
+            <td  class="totcol"><input type="number" id="dtamt" name="dtamt" class="tamt3" value="0" ></td>
+        </tr> 
+
+        
+       <tr class="head"> 
              <td class="text-center "  colspan="5"> <b>B. SHIFTING MATERIAL MONTH OF <?php echo date('F-Y',strtotime($month)) ?></b> </td>  
         </tr>
 
@@ -161,19 +207,28 @@ if(isset($_POST['month'])){
             <th>AMOUNT</th>
        </tr>
        <?php   
-        $material=array('PVC COMPOUND 1701 TO 2205','PVC COMPOUND ( IN PLANT )','GI / ALU WIRE (Double)','GI WIRE (IN PLANT)','RM ShiftingS RAPPING'); 
-        $rate2=[65,65,80,80,80];
+        // $material=array('PVC COMPOUND 1701 TO 2205','PVC COMPOUND ( IN PLANT )','GI / ALU WIRE (Double)','GI WIRE (IN PLANT)','RM ShiftingS RAPPING'); 
+        // $rate2=[65,65,80,80,80];
 
-        for($i=0;$i<5;$i++){ ?>
+        // for($i=0;$i<5;$i++){ 
+            $sql11="SELECT name,rate FROM  drum_material WHERE isDelete=0 ";
+            $run11=sqlsrv_query($conn,$sql11);
+            while($row11=sqlsrv_fetch_array($run11,SQLSRV_FETCH_ASSOC)) { ?>
         <tr>
-            <th><input type="text" class="bmat"  name="type[]" autocomplete="off" value="<?php echo $material[$i]?>">
+            <th><input type="text" class="bmat"  name="type[]" autocomplete="off" value="<?php echo $row11['name'] ?>">
                 <input type="hidden" name="cat[]" class="cat"  value="RM_Shifting">
                 <input type="hidden" name="remark[]"  class="remark">
+                <?php 
+            $sql12="SELECT count(Drum_No) as cn FROM Dshift WHERE format(Date,'yyyy-MM')='$month' AND Material='".$row11['name'] ."' "; 
+            $run12=sqlsrv_query($conn,$sql12);
+            $row12=sqlsrv_fetch_array($run12,SQLSRV_FETCH_ASSOC);
+            ?>
+          
             </th>
-            <td><input type="number" class="bqty"  name="qty[]" step="0.01" autocomplete="off"></td>
-            <td><input type="number" class="bfqty"  name="fqty[]" step="0.01" autocomplete="off"></td>
-            <td><input type="number" class="brate"  name="rate[]" step="0.01" value="<?php echo $rate2[$i]  ?>" ></td>
-            <td><input type="number" class="bamt"  name="amt[]" step="0.01" readonly></td>
+            <td><input type="text" class="bqty"  name="qty[]" step="0.01"  autocomplete="off"></td>
+            <td><input type="number" class="bfqty"  name="fqty[]" step="0.01"  value="<?php echo $row12['cn'] ?>" autocomplete="off"></td>
+            <td><input type="number" class="brate"  name="rate[]" step="0.01" value="<?php echo $row11['rate']  ?>" ></td>
+            <td><input type="number" class="bamt"  name="amt[]" step="0.01"  value="<?php echo $row11['rate'] *$row12['cn']  ?>" readonly></td>
         </tr>
        <?php 
         }
@@ -216,7 +271,7 @@ if(isset($_POST['month'])){
           <tr>
               <th>
                   <?php if ($i==3) { ?>
-                    <input type="text"   name="type[]" autocomplete="off" value="<?php echo $pmaterial[$i]?>" readonly>
+                    <input type="text" name="type[]" autocomplete="off" value="<?php echo $pmaterial[$i]?>" readonly>
                     <!-- <span class="roundoff"  name="type[]"><?php echo $pmaterial[$i] ?></span> -->
                      
                   <?php } else { ?>
@@ -249,7 +304,6 @@ if(isset($_POST['month'])){
                 <!-- <input type="number" class="cqty"  step="0.01  " id="cqty<?php echo $i; ?>" name="qty[]" autocomplete="off" value='0'> -->
                 
               <td><input type="number" class="cfqty"  name="fqty[]" autocomplete="off" readonly></td>
-              
               <td><input type="number" class="crate"  name="rate[]" value="<?php echo $rate1[$i] ?>" <?php if($i!=3){ ?> readonly <?php  } ?> ></td>
               <td><input type="number"  step="0.1" class="camt"  name="amt[]" value="<?php echo ($row7['tqty']/1000)*$rate1[$i] ?>" ></td>
           </tr>
@@ -465,8 +519,9 @@ if(isset($_POST['month'])){
         var tamt1 = parseFloat($(".tamt").val());
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
-        $(".total").val((tamt1 + tamt2 + tamt3).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3).toFixed(2));
+        var tamt4 = parseFloat($(".tamt3").val());
+        $(".total").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        $("#tamount").val((tamt1 + tamt2 + tamt3 + tamt4).toFixed(2));
         //$("#grandtotal").val((tamt1 + tamt2 + tamt3).toFixed(2));
        
         let totalSum1 = 0;
@@ -506,6 +561,75 @@ if(isset($_POST['month'])){
          // You can choose to display the total in any field you prefer.
     });
    
+    $(document).on("change",".dfqty,.drate",function(){
+        var amt = 0;
+        var totalSum=0;
+        var rate = $(this).closest('tr').find('.drate').val();
+        var qty = $(this).closest('tr').find('.dfqty').val(); 
+        $(this).closest('tr').find('.damt').val(rate*qty);
+
+        $('.dfqty').each(function () {
+                const value = parseFloat($(this).val());
+               
+                if(!isNaN(value)) {
+                    totalSum += value;
+                } 
+            });
+            $('#dtqty').val(totalSum);
+
+        $('.damt').each(function () {
+            const value= parseFloat($(this).val());
+            if (!isNaN(value)) {
+                amt += value;
+            }
+            });
+         
+        $(".tamt3").val(amt);   
+        var tamt1 = parseFloat($(".tamt").val());
+        var tamt2 = parseFloat($(".tamt1").val());
+        var tamt3 = parseFloat($(".tamt2").val());
+        var tamt4 = parseFloat($(".tamt3").val());
+        $(".total").val((tamt1 + tamt2 + tamt3+ tamt4).toFixed(2));
+        $("#tamount").val((tamt1 + tamt2 + tamt3+ tamt4).toFixed(2));
+        //$("#grandtotal").val((tamt1 + tamt2 + tamt3).toFixed(2));
+       
+        let totalSum1 = 0;
+        
+        $('.tamount').each(function () {
+            const value = parseFloat($(this).val());
+            
+            if (!isNaN(value)) {
+                totalSum1 += value;
+            } 
+        });
+        // Display the total sum
+        $('#grandtotal').val(totalSum1.toFixed(2));
+    
+    });
+    
+      // Calculate and display the total sum for AMOUNT and QTY when the page loads
+      $(document).ready(function() {
+        let totalSumQty = 0;
+        let totalSumAmt = 0;
+        
+        // Calculate the total sum for AMOUNT and QTY
+        $('.dfqty').each(function() {
+            const qty = parseFloat($(this).val());
+            const rate = parseFloat($(this).closest('tr').find('.drate').val());
+            
+            if (!isNaN(qty) && !isNaN(rate)) {
+                const amt = qty * rate;
+                totalSumQty += qty;
+                totalSumAmt += amt;
+            }
+        });
+
+        // Display the total sum for QTY and AMOUNT
+        $('#dtqty').val(totalSumQty);
+        $('#dtamt').val(totalSumAmt);
+         // You can choose to display the total in any field you prefer.
+    });
+   
     $(document).on("change",".bfqty,.brate",function(){
         var amt = 0;
         var totalSum= 0;
@@ -534,8 +658,9 @@ if(isset($_POST['month'])){
         var tamt1 = parseFloat($(".tamt").val());
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
-        $(".total").val((tamt1 + tamt2 + tamt3).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3).toFixed(2));
+        var tamt4 = parseFloat($(".tamt3").val());
+        $(".total").val((tamt1 + tamt2 + tamt3 + tamt4).toFixed(2));
+        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
         //$("#grandtotal").val((tamt1 + tamt2 + tamt3).toFixed(2));
        
         let totalSum1 = 0;
@@ -550,6 +675,28 @@ if(isset($_POST['month'])){
         // Display the total sum
         $('#grandtotal').val(totalSum1.toFixed(2));
     
+    });
+
+    $(document).ready(function() {
+        let totalSumQty = 0;
+        let totalSumAmt = 0;
+        
+        // Calculate the total sum for AMOUNT and QTY
+        $('.bfqty').each(function() {
+            const qty = parseFloat($(this).val());
+            const rate = parseFloat($(this).closest('tr').find('.brate').val());
+            
+            if (!isNaN(qty) && !isNaN(rate)) {
+                const amt = qty * rate;
+                totalSumQty += qty;
+                totalSumAmt += amt;
+            }
+        });
+
+        // Display the total sum for QTY and AMOUNT
+        $('#btqty').val(totalSumQty);
+        $('#btamt').val(totalSumAmt);
+         // You can choose to display the total in any field you prefer.
     });
 
     $(document).on("change",".cqty,.crate",function(){
@@ -580,8 +727,9 @@ if(isset($_POST['month'])){
         var tamt1 = parseFloat($(".tamt").val());
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
-        $(".total").val((tamt1 + tamt2 + tamt3).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3).toFixed(2));
+        var tamt4 = parseFloat($(".tamt3").val());
+        $(".total").val((tamt1 + tamt2 + tamt3 + tamt4).toFixed(2));
+        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
 
       
         let totalSum1 = 0;
@@ -627,8 +775,9 @@ if(isset($_POST['month'])){
         var tamt1 = parseFloat($(".tamt").val());
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
-        $(".total").val((tamt1 + tamt2 + tamt3).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3).toFixed(2));
+        var tamt4 = parseFloat($(".tamt3").val());
+        $(".total").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        $("#tamount").val((tamt1 + tamt2 + tamt3 + tamt4).toFixed(2));
        // $("#grandtotal").val((tamt1 + tamt2 + tamt3).toFixed(2));
       
         let totalSum1 = 0;

@@ -17,6 +17,8 @@ if(isset($_POST['save'])){
     $btamt=$_POST['btamt'];
     $ctqty=$_POST['ctqty'];
     $ctamt=$_POST['ctamt'];
+    $dtqty=$_POST['dtqty'];
+    $dtamt=$_POST['dtamt'];
     $fqty=$_POST['fqty'];
    // $total=$_POST['total'];
     $remark=$_POST['remark'];
@@ -33,6 +35,10 @@ if(isset($_POST['save'])){
         }elseif($cat[$key]=='RM_Shifting'){
             $tqty=$btqty;
             $tamt=$btamt;
+          
+        }elseif($cat[$key]=='others'){
+            $tqty=$dtqty;
+            $tamt=$dtamt;
           
         }elseif($cat[$key]=='Purchase_Unloading'){
             $tqty=$ctqty;
@@ -106,6 +112,8 @@ if(isset($_POST['update'])){
     $btamt=$_POST['btamt'];
     $ctqty=$_POST['ctqty'];
     $ctamt=$_POST['ctamt'];
+    $dtqty=$_POST['dtqty'];
+    $dtamt=$_POST['dtamt'];
     $fqty=$_POST['fqty'];
     $total=$_POST['total'];
     $remark=$_POST['remark'];
@@ -122,6 +130,9 @@ if(isset($_POST['update'])){
         }elseif($cat[$key]=='RM_Shifting'){
             $tqty=$btqty;
             $tamt=$btamt;
+        }elseif($cat[$key]=='others'){
+            $tqty=$dtqty;
+            $tamt=$dtamt;
         }elseif($cat[$key]=='Purchase_Unloading'){
             $tqty=$ctqty;
             $tamt=$ctamt;
