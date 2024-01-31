@@ -359,7 +359,7 @@ $year = date('Y', strtotime("$month-01"));
                 </div>
             </div>
         </div>
-          <!-- Second Modal -->
+          <!-- Second Modal for for rm software -->
           <div class="modal fade" id="secondModal" tabindex="-1" aria-labelledby="secondModalLabel" aria-hidden="true">
             <div class="modal-dialog custom-modal">
                 <div class="modal-content">

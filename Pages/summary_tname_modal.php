@@ -16,61 +16,63 @@ $year = date('Y', strtotime("$mon-01"));
             width:50%;
             text-align: center;
             padding:0px !important;
-        }
-        .totaltname{
-            background: transparent !important;
-            border: none;
-            outline: none;
-            box-shadow: none;
-            width: 100%;
-            /* text-align: center; */
-        }
+}
+.totaltname{
+    background: transparent !important;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    width: 100%;
+    /* text-align: center; */
+}
 
-        #tnametable th,
-        #tnametable td {
-            text-align: center ;
-            white-space:nowrap;
-    }
+#tnametable th,
+#tnametable td {
+    text-align: center ;
+    white-space:nowrap;
+}
 </style>
 <div class="total">
-        <h5 >Total Qty:</h5> <h5><input class="totaltname" type="number" id="totaltname" >
-       
-    </h5>
-    </div>
+        <h5 >Total Qty:</h5> <h5><input class="totaltname" type="number" id="totaltname" ></h5>
+</div>
 
 <table class="table table-bordered text-center table-striped table-hover mt-7" id="tnametable">
    <thead>
         <tr class="bg-secondary text-light">
             <th>Sr No.</th>
             <th>From Date</th>
-            <th>To Date </th>
+            <!-- <th>To Date </th> -->
             <th>Weight</th>
             <th>Type</th>
             <th>Name</th>
-            <th style="width:50px;">Qnty</th>
-            <th>Rate</th>
+            <th>Qnty</th>
+            <!-- <th>Rate</th> -->
          </tr>
    </thead> 
    <tbody>
     <tr>
         <?php
         $sr=1;
-            $sql="SELECT * FROM scraphead h left outer join scrapdetail t on h.id=t.head_id 
-            where h.Teamname='$tname' AND h.Month='$month' AND FORMAT(H.Fromdate,'yyyy')='$year'";
+            $sql="SELECT distinct(Fromdate),sum(Totalwt) as ttwt,sum(qnty) as tqty,Type ,Name FROM scraphead h left outer join scrapdetail t on h.id=t.head_id 
+            where h.Teamname='$tname' AND h.Month='$month' AND FORMAT(H.Fromdate,'yyyy')='$year'
+            group by Name, Fromdate,Type order by Fromdate";
+      
             $run=sqlsrv_query($conn,$sql);
+
             while($row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC)){ 
+            
         ?>
             <tr>
                 <td><?php echo $sr ?></td>
                 <td><?php echo $row['Fromdate']->format('Y-m-d')  ?></td>
-                <td><?php echo $row['Todate']->format('Y-m-d')  ?></td>
-                <td><?php echo $row['Totalwt']  ?></td>
+               
+                <td><?php echo $row['ttwt']  ?></td>
                 <td><?php echo $row['Type']  ?></td>
                 <td><?php echo $row['Name']  ?></td>
                 <td>
-                    <input type="text" class="tnameqty" value="<?php echo $row['qnty']  ?>" > 
+                    <input type="text" class="tnameqty" value="<?php echo $row['tqty']  ?>" > 
                 </td>
-                <td><?php echo $row['rate']  ?></td>
+                <!-- <td><?php echo $row['rate']  ?></td> -->
             </tr> 
         <?php 
         $sr++; }
@@ -81,22 +83,23 @@ $year = date('Y', strtotime("$mon-01"));
 </table>
 <script>
 
-$(document).ready(function() {
-    let totalSum = 0;
+    $(document).ready(function() {
+        let totalSum = 0;
+        console.log(totalSum)
+        // Update total sum when the page loads
+        $('.tnameqty').each(function() {
+            const value = parseFloat($(this).val());
+            if (!isNaN(value)) {
+                totalSum += value;
+            }
+        });
 
-    // Update total sum when the page loads
-    $('.tnameqty').each(function() {
-        const value = parseFloat($(this).val());
-        if (!isNaN(value)) {
-            totalSum += value;
-        }
+        // Display the total sum
+        $('#totaltname').val(totalSum.toFixed(2));
+
     });
 
-    // Display the total sum
-    $('#totaltname').val(totalSum.toFixed(2));
-
-});
-        $(document).ready(function(){
+    $(document).ready(function(){
 		var table = $('#tnametable').DataTable({   // initializes a DataTable using the DataTables library 
 		    "processing": true,                  //This option enables the processing indicator to be shown while the table is being processed
 			 dom: 'Bfrtip',                      // This option specifies the layout of the table's user interface B-buttons,f-flitering input control,T-table,I-informationsummary,P-pagination

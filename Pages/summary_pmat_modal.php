@@ -3,7 +3,6 @@ include('../includes/dbcon.php');
 
 $mon=$_POST['mon'];
 $pmat=$_POST['pmat'];
-echo $pmat;
 
 ?>
 <style>

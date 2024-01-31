@@ -109,7 +109,7 @@ $year=date('Y');
                     $sqmm=$row1['Sqmm'];
                     $ctype=$row1['ConductorType'];
                     $unit=$row1['Unit'];
-                     $rem=$row1['Remark'];
+                    $rem=$row1['Remark'];
                 }else{
                     $sql="SELECT MAX(Challanno) AS ch FROM Dshift";
                     $run=sqlsrv_query($conn,$sql);
@@ -201,9 +201,9 @@ $year=date('Y');
                     <label  class="form-label col-lg-3 col-md-6" for="type">Type
                         <select  class="form-select" name="type" id="type" required  onchange="toggleRequired()">>
                             <option disabled selected value=""></option>
-                            <option value="drums">Drums</option>
-                            <option value="material">Material</option>
-                            <option value="other">Others</option>
+                            <option <?php if($type=="drums"){ ?> selected  <?php } ?> value="drums">Drums</option>
+                            <option <?php if($type=="material"){ ?> selected  <?php } ?> value="material">Raw Material</option>
+                            <option <?php if($type=="other"){ ?> selected  <?php }  ?> value="other">Scrap/General</option>
                         </select>
                     </label>
                     <label  class="form-label col-lg-3 col-md-6 stage" for="stage">Stage

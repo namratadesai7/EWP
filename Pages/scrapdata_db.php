@@ -7,13 +7,13 @@ if(isset($_POST['save'])){
 //head part
 $stype=$_POST['stype'];
 $fdate=$_POST['fdate'];
-$tdate=$_POST['tdate'];
+// $tdate=$_POST['tdate'];
 $month=$_POST['month'];
 $tname=$_POST['tname'];
 $mp=$_POST['mp'];
 $twt=$_POST['twt'];
 $tamt=$_POST['tamt'];
-$wscale=$_POST['wscale'];
+// $wscale=$_POST['wscale'];
 
 //detail part
 $type=$_POST['type'];
@@ -29,7 +29,7 @@ $run1 =sqlsrv_query($conn,$sql1);
 $row1=sqlsrv_fetch_array($run1,SQLSRV_FETCH_ASSOC);
 $count=$row1['num']+1;
 
-$sql="INSERT INTO scraphead(id,Typeofscrap,Fromdate,Todate,Month,Teamname,mp,Totalwt,Totalamt,createdBy,wt_scale) VALUES('$count','$stype','$fdate','$tdate','$month','$tname','$mp','$twt','$tamt','".$_SESSION['empid']."','$wscale')";
+$sql="INSERT INTO scraphead(id,Typeofscrap,Fromdate,Month,Teamname,mp,Totalwt,Totalamt,createdBy) VALUES('$count','$stype','$fdate','$month','$tname','$mp','$twt','$tamt','".$_SESSION['empid']."')";
 $run= sqlsrv_query($conn,$sql);
 // echo $sql.'<br>';
 if($run){
@@ -122,24 +122,27 @@ if(isset($_POST['update'])){
     }
 }
 
-//delete
-if(isset($_GET['del'])){
-    $id=$_GET['del'];
 
-    $sql="UPDATE Table_1 SET Isdelete=1, UpdatedBy='$userid', UpdatedAt='$date' WHERE Sr='$Sr'";
+//delete
+if(isset($_GET['delete'])){
+    $id=$_GET['delete'];
+
+    $sql="UPDATE scraphead SET Isdelete=1, UpdatedAt='".date('Y-m-d')."',UpdatedBy='".$_SESSION['empid']."' WHERE id ='$id'";
     $run=sqlsrv_query($conn,$sql);
 
 if($run){
     ?>
     <script>
         alert('Deleted Successfully');
-        window.open('gatepass.php','_self');
+        window.open('scrapdata.php','_self');
     </script>
     <?php
     }else{
         print_r(sqlsrv_errors());
     }
 }
+
+
 
 ?>
 

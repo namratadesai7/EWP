@@ -51,9 +51,9 @@ $year=date('Y');
             padding: 3px 6px !important;
         }
         #scrapTable th,
-    #scrapTable td {
-        text-align: center;
-    }
+        #scrapTable td {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -73,11 +73,11 @@ $year=date('Y');
                         <th>Sr</th>
                         <th>Scrap Type</th>
                         <th>From Date</th>
-                        <th>To Date</th>
+                        <!-- <th>To Date</th> -->
                         <th>Month</th>
                         <th>Team Name</th>
                         <th>M.p</th>
-                        <th>Wt_scale</th>                        
+                        <!-- <th>Wt_scale</th>                         -->
                         <th>Total WT</th>
                         <th>Total Amt</th>
                       
@@ -99,7 +99,7 @@ $year=date('Y');
                             // where wt_scale = 1 order by id desc";
                             $sql="SELECT wt_scale, id, Typeofscrap,format(Fromdate,'yyyy-MM-dd') as fdate,format(Todate,'yyyy-MM-dd') as tdate,Month, Teamname, mp, Totalwt, Totalamt
                             FROM scraphead 
-                           where Month='$mon' and format(Todate,'yyyy')='$year' order by wt_scale  ";
+                           where Month='$mon' and format(Fromdate,'yyyy')='$year' and Isdelete='0' order by wt_scale  ";
                             $run=sqlsrv_query($conn,$sql);
                             $printedSrNos = array();
                             while($row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC)){
@@ -122,11 +122,11 @@ $year=date('Y');
                                 <!-- <td><?php echo $row['head_id']  ?></td> -->
                                 <td  ><?php if($row['Typeofscrap'] =='CP'){ echo "Control/Power"; }elseif($row['Typeofscrap'] =='IP'){ echo "Instru/Panni"; } else{echo "Other Extra";}   ?></td>
                                 <td ><?php echo $row['fdate'] ?></td>
-                                <td ><?php echo $row['tdate']?></td>
+                                <!-- <td ><?php echo $row['tdate']  ?></td> -->
                                 <td ><?php echo $row['Month']  ?></td>
                                 <td ><?php echo $row['Teamname']  ?></td>
                                 <td ><?php echo $row['mp']  ?></td>
-                                <td><?php echo 'wt'.$row['wt_scale'] ?></td>
+                                <!-- <td><?php echo 'wt'.$row['wt_scale'] ?></td> -->
                                 <td ><?php echo $row['Totalwt']  ?></td>
                                 <td ><?php echo $row['Totalamt']  ?></td>                             
                                 <!-- <td><?php echo $row['Type']  ?></td>
@@ -135,7 +135,8 @@ $year=date('Y');
                                 <td><?php echo $row['qnty']  ?></td>
                                 <td><?php echo $row['rate']  ?></td>
                                 <td  class="<?php echo $condi ?>"><?php echo $row['amount'] ?></td> -->                              
-                                <td  class="tdCss" ><a href="scrapdata_edit.php?edit=<?php echo $row['id']?>"  class="btn rounded-pill btn-warning btn-sm"  >Edit</a></td>
+                                <td  class="tdCss" ><a href="scrapdata_edit.php?edit=<?php echo $row['id']?>"  class="btn rounded-pill btn-warning btn-sm"  >Edit</a>
+                                <a href="scrapdata_db.php?delete=<?php echo $row['id'] ?>" class="btn rounded-pill btn-danger btn-sm delete" name="delete" onclick="return confirm('Are you sure you want to delete this record?');">Delete</a></td>
                             </tr>
                         <?php
                         //  $sr++; 
@@ -153,9 +154,7 @@ $year=date('Y');
 <script>
      $('#sdata').addClass('active');
 
-
-     var currentDate = new Date();
-
+    var currentDate = new Date();
     // Get the current month and year
     var currentMonth = currentDate.getMonth() + 1; // Months are zero-based
     var currentYear = currentDate.getFullYear();

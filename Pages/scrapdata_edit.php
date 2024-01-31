@@ -59,7 +59,7 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
 <body>
 <div class="container-fluid fl">
         
-        <form action="scrapdata_db.php" method="post" autocomplete="off">
+    <form action="scrapdata_db.php" method="post" autocomplete="off">
             <div class="row mb-3">
                 <div class="col"><h4 class="pt-2 mb-0">Edit Scrap data</h4></div>
                 <div class="col-auto"> <button type="submit" class="btn  rounded-pill common-btn"  name="update" >Update</button></div>
@@ -69,7 +69,7 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
             <div class="divCss">
                 <div class="row px-2">
 
-                    <label class="form-label col-lg-3 col-md-6" for="wscale">Weight Scale
+                    <!-- <label class="form-label col-lg-3 col-md-6" for="wscale">Weight Scale
                         <?php
                         $row['wt_scale']=$row['wt_scale'] ?? $wscale; 
                         ?>
@@ -81,9 +81,9 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                             <option <?php if($row['wt_scale']==4) { ?> selected <?php } ?> value="4">Weight Scale-4</option>
                             <option <?php if($row['wt_scale']==5) { ?> selected <?php } ?> value="5">Weight Scale-5</option>
                         </select>
-                    </label> 
+                    </label>  -->
 
-                    <label class="form-label col-lg-3 col-md-6" for="fdate">From Date
+                    <label class="form-label col-lg-3 col-md-6" for="fdate">Date
                         <?php
                         $row['fdate']=$row['fdate']  ?? $fdate;
                         ?>
@@ -92,13 +92,13 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                         
                     </label>
 
-                    <label class="form-label col-lg-3 col-md-6" for="tdate">To Date
+                    <!-- <label class="form-label col-lg-3 col-md-6" for="tdate">To Date
                         <?php 
                          $row['tdate']=$row['tdate']?? $tdate;
                          ?>
                         <input class="form-control" type="date" id="tdate" name="tdate" onchange="checkDateSelection()" value="<?php echo $row['tdate'] ?>" required >
                         <p id="alertMessage" style="color: red;"></p>
-                    </label>
+                    </label> -->
                     
                     <label class="form-label col-lg-3 col-md-6" for="month">Month
                         <input class="form-control" type="text" id="month" name="month" value="<?php echo $row['Month'] ?? '' ?>" readonly required>
@@ -124,7 +124,7 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                       
                             ?>
                             
-                            <option <?php if($row['Teamname']==$row1['name']) { ?> selected <?php } ?> > <?php echo $row1['name'] ?> </option>
+                            <option <?php if($row['Teamname'] ?? ''==$row1['name']) { ?> selected <?php } ?> > <?php echo $row1['name'] ?> </option>
                             <?php
                             } ?>  
                         </select>
@@ -142,199 +142,199 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                         <input class="form-control" type="number" id="tamt" name="tamt" value="<?php echo $row['Totalamt']?? '' ?>" readonly  >
                     </label>
 
-                <div id="showrec">
-                <?php
-                if($fdate==''){
+                <!-- <div id="showrec">
+                    <?php
+                    if($fdate==''){
 
-                }else{
-                    ?>
-                    <table class="table table-bordered text-center mb-0">
-                        <thead>
-                            <th>Ws</th>
-                            <th>Fdate</th>
-                            <th>Tdate</th>
-                            <th>View</th>
-                        </thead>
-                        <tbody>                                                                                                                                                                           
-                            <tr>
-                            <?php
-                            $sr=1;
-                            $timestamp = strtotime($fdate);
-                            $mon=date('F',$timestamp);
-                                $sql1=" SELECT wt_scale,Fromdate,Todate from scraphead where Month='$mon' and wt_scale='$wscale' ";
-                                $run1=sqlsrv_query($conn,$sql1);              
-                                while($row1=sqlsrv_fetch_array($run1,SQLSRV_FETCH_ASSOC)){
-                            ?>
-                            <td><?php echo $row1['wt_scale'] ?></td>
-                            <td><?php echo $row1['Fromdate']->format('Y-m-d')  ?></td>
-                            <td><?php echo $row1['Todate']->format('Y-m-d')  ?> </td>
-                            <td><button class="btn btn-sm rounded-pill btn-warning"  onclick="datechange(this)"  id="<?php echo $row2['cn'] ?>"
-                            data-name="<?php echo $row2['t'] ?>" > View</button></td>
-                            </tr>
-                            <?php 
-                            $sr++;
-                                }
+                    }else{
+                        ?>
+                        <table class="table table-bordered text-center mb-0">
+                            <thead>
+                                <th>Ws</th>
+                                <th>Fdate</th>
+                                <th>Tdate</th>
+                                <th>View</th>
+                            </thead>
+                            <tbody>                                                                                                                                                                           
+                                <tr>
+                                <?php
+                                $sr=1;
+                                $timestamp = strtotime($fdate);
+                                $mon=date('F',$timestamp);
+                                    $sql1=" SELECT wt_scale,Fromdate,Todate from scraphead where Month='$mon' and wt_scale='$wscale' ";
+                                    $run1=sqlsrv_query($conn,$sql1);              
+                                    while($row1=sqlsrv_fetch_array($run1,SQLSRV_FETCH_ASSOC)){
                                 ?>
-                        </tbody>
-                    </table>
+                                <td><?php echo $row1['wt_scale'] ?></td>
+                                <td><?php echo $row1['Fromdate']->format('Y-m-d')  ?></td>
+                                <td><?php echo $row1['Todate']->format('Y-m-d')  ?> </td>
+                                <td><button class="btn btn-sm rounded-pill btn-warning"  onclick="datechange(this)"  id="<?php echo $row2['cn'] ?>"
+                                data-name="<?php echo $row2['t'] ?>" > View</button></td>
+                                </tr>
+                                <?php 
+                                $sr++;
+                                    }
+                                    ?>
+                            </tbody>
+                        </table>
                 <?php
                 }
                 ?>    
-                </div>
-                </div>
-                <div class="row mb-3">              
-                    <div class="col ms-2"> <button type="button"  id="addRowBtn" class="btn  rounded-pill btn-danger mt-2" >Add</button></div>                
-                </div>    
-                <div id="showdata">                          
-                    <table  class="table table-bordered text-center mb-0" id="scrapTable" >
-                        <thead>
-                            <th>Type</th>
-                            <th>Name</th>
-                            <th>Remark</th>
-                            <th>Qnty</th>
-                            <th>Rate</th>
-                            <th>Amount</th>   
-                            <th></th>                  
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <?php
-                               
-                                $run2=sqlsrv_query($conn,$sql2);
-                                while($row2=sqlsrv_fetch_array($run2,SQLSRV_FETCH_ASSOC)){
-                                    ?>                       
-                                <td>
-                                    <input type="hidden" name="detailSr[]" value="<?php echo $row2['id'] ?? '' ?>">
-                                    <input type="text" id="type" class="type" name="type[]" value="<?php echo $row2['Type'] ?? '' ?>">
-                                </td>
-                                <td><input class="name" type="text"  name="name[]" value="<?php echo $row2['Name'] ?? '' ?>"></td>
-                                <td><input type="text" class="rem" name="rem[]" value="<?php echo $row2['Remark'] ?? '' ?>"></td>
-                                <td><input step="0.01" class="qty" type="number"  name="qty[]" value="<?php echo $row2['qnty'] ?? '' ?>"></td>
-                                <td><input step="0.01" class="rate" type="number"  name="rate[]" value="<?php echo $row2['rate'] ?? ''   ?>"> </td>
-                                <td><input class="amt" type="number" name="amt[]" value="<?php echo $row2['amount'] ?? '' ?>" readonly></td>       
-                                <td></td>                    
-                                <?php                          
-                                ?>
-                            </tr>
-                            <?php
-                                }              
-                            ?>                      
-                        </tbody>
-                    </table>
-                </div>    
+                </div> -->
             </div>
-        </form>
+            <div class="row mb-3">              
+                <div class="col ms-2"> <button type="button"  id="addRowBtn" class="btn  rounded-pill btn-danger mt-2" >Add</button></div>                
+            </div>    
+            <div id="showdata">                          
+                <table  class="table table-bordered text-center mb-0" id="scrapTable" >
+                    <thead>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Remark</th>
+                        <th>Qnty</th>
+                        <th>Rate</th>
+                        <th>Amount</th>   
+                        <th></th>                  
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <?php
+                            
+                            $run2=sqlsrv_query($conn,$sql2);
+                            while($row2=sqlsrv_fetch_array($run2,SQLSRV_FETCH_ASSOC)){
+                                ?>                       
+                            <td>
+                                <input type="hidden" name="detailSr[]" value="<?php echo $row2['id'] ?? '' ?>">
+                                <input type="text" id="type" class="type" name="type[]" value="<?php echo $row2['Type'] ?? '' ?>">
+                            </td>
+                            <td><input class="name" type="text"  name="name[]" value="<?php echo $row2['Name'] ?? '' ?>"></td>
+                            <td><input type="text" class="rem" name="rem[]" value="<?php echo $row2['Remark'] ?? '' ?>"></td>
+                            <td><input step="0.01" class="qty" type="number"  name="qty[]" value="<?php echo $row2['qnty'] ?? '' ?>"></td>
+                            <td><input step="0.01" class="rate" type="number"  name="rate[]" value="<?php echo $row2['rate'] ?? ''   ?>"> </td>
+                            <td><input class="amt" type="number" name="amt[]" value="<?php echo $row2['amount'] ?? '' ?>" readonly></td>       
+                            <td></td>                    
+                            <?php                          
+                            ?>
+                        </tr>
+                        <?php
+                            }              
+                        ?>                      
+                    </tbody>
+                </table>
+            </div>    
+        </div>
+    </form>
     </div>
 </body>
 </html>
 <script>
     $('#sdata').addClass('active');
 
-    function datechange(button) {
-        // Traverse the DOM to find the parent row
-        var row = $(button).closest('tr');
-        var wtscale=row.find('td:nth-child(1)').text().trim();
-        var fromdateString = row.find('td:nth-child(2)').text().trim();
-        var todateString = row.find('td:nth-child(3)').text().trim();
+    // function datechange(button) {
+    //     // Traverse the DOM to find the parent row
+    //     var row = $(button).closest('tr');
+    //     var wtscale=row.find('td:nth-child(1)').text().trim();
+    //     var fromdateString = row.find('td:nth-child(2)').text().trim();
+    //     var todateString = row.find('td:nth-child(3)').text().trim();
 
-        var cn = $(button).attr('id');
-        var t = $(button).data('name');
+    //     var cn = $(button).attr('id');
+    //     var t = $(button).data('name');
 
-        $('#fdate').val(fromdateString)
-        $('#tdate').val(todateString);
+    //     $('#fdate').val(fromdateString)
+    //     $('#tdate').val(todateString);
 
-        var fdate = $('#fdate').val();
-        var tdate = $('#tdate').val();
-        var wscale=$('#wscale').val();
-        console.log(fdate,tdate,wscale);
+    //     var fdate = $('#fdate').val();
+    //     var tdate = $('#tdate').val();
+    //     var wscale=$('#wscale').val();
+    //     console.log(fdate,tdate,wscale);
 
-        // console.log(month);
-        if (fdate!='' && tdate!='' && wscale!=''  && wscale!=null) {        
-            // Check if the record already exists in the database
-            $.ajax({
-                url: 'scrap_check_record.php', // Create a new PHP file for checking if the record exists
-                type: 'post',
-                data: {
-                    fdate: fdate,
-                    tdate: tdate,
-                    wscale:wscale
-                },
-                success: function (data) {
-                    if (data === "exists") {
-                        // If the record exists, redirect to the edit page for that record
-                        window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;
+    //     // console.log(month);
+    //     if (fdate!='' && tdate!='' && wscale!=''  && wscale!=null) {        
+    //         // Check if the record already exists in the database
+    //         $.ajax({
+    //             url: 'scrap_check_record.php', // Create a new PHP file for checking if the record exists
+    //             type: 'post',
+    //             data: {
+    //                 fdate: fdate,
+    //                 tdate: tdate,
+    //                 wscale:wscale
+    //             },
+    //             success: function (data) {
+    //                 if (data === "exists") {
+    //                     // If the record exists, redirect to the edit page for that record
+    //                     window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;
                      
-                        //   window.location.href = 'summary_edit.php?param2=' + month + '&param1=' + cont;
-                    } else {
-                        // If the record doesn't exist, load the form for adding a new record
-                        // window.location.href = 'scrapdata_add.php';  
-                        window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;                                          
-                    }
-                    var mon=$('#month').val();
+    //                     //   window.location.href = 'summary_edit.php?param2=' + month + '&param1=' + cont;
+    //                 } else {
+    //                     // If the record doesn't exist, load the form for adding a new record
+    //                     // window.location.href = 'scrapdata_add.php';  
+    //                     window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;                                          
+    //                 }
+    //                 var mon=$('#month').val();
                    
-                },
-                error: function (res) {
-                    console.log(res);
-                }
-            });
-        }else{
-            console.log("empty")
-        }
-    }
+    //             },
+    //             error: function (res) {
+    //                 console.log(res);
+    //             }
+    //         });
+    //     }else{
+    //         console.log("empty")
+    //     }
+    // }
 
     
-    $(document).on("change", ".fdate,.tdate,.wscale", function () {
-        var fdate = $('#fdate').val();
-        var tdate = $('#tdate').val();
-        var wscale=$('#wscale').val();
-        console.log(fdate,tdate,wscale);
+    // $(document).on("change", ".fdate,.tdate,.wscale", function () {
+    //     var fdate = $('#fdate').val();
+    //     var tdate = $('#tdate').val();
+    //     var wscale=$('#wscale').val();
+    //     console.log(fdate,tdate,wscale);
 
 
-        // console.log(month);
-        if (fdate!='' && tdate!='' && wscale!=''  && wscale!=null) {        
-            // Check if the record already exists in the database
-            $.ajax({
-                url: 'scrap_check_record.php', // Create a new PHP file for checking if the record exists
-                type: 'post',
-                data: {
-                    fdate: fdate,
-                    tdate: tdate,
-                    wscale:wscale
-                },
-                success: function (data) {
-                    if (data === "exists") {
-                        // If the record exists, redirect to the edit page for that record
-                        window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;
+    //     // console.log(month);
+    //     if (fdate!='' && tdate!='' && wscale!=''  && wscale!=null) {        
+    //         // Check if the record already exists in the database
+    //         $.ajax({
+    //             url: 'scrap_check_record.php', // Create a new PHP file for checking if the record exists
+    //             type: 'post',
+    //             data: {
+    //                 fdate: fdate,
+    //                 tdate: tdate,
+    //                 wscale:wscale
+    //             },
+    //             success: function (data) {
+    //                 if (data === "exists") {
+    //                     // If the record exists, redirect to the edit page for that record
+    //                     window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;
                      
-                        //   window.location.href = 'summary_edit.php?param2=' + month + '&param1=' + cont;
-                    } else {
-                        // If the record doesn't exist, load the form for adding a new record
-                        // window.location.href = 'scrapdata_add.php';  
-                        window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;                                          
-                    }
-                    var mon=$('#month').val();
+    //                     //   window.location.href = 'summary_edit.php?param2=' + month + '&param1=' + cont;
+    //                 } else {
+    //                     // If the record doesn't exist, load the form for adding a new record
+    //                     // window.location.href = 'scrapdata_add.php';  
+    //                     window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;                                          
+    //                 }
+    //                 var mon=$('#month').val();
                    
-                },
-                error: function (res) {
-                    console.log(res);
-                }
-            });
-        }else{
-            console.log("empty")
-        }
-    }); 
+    //             },
+    //             error: function (res) {
+    //                 console.log(res);
+    //             }
+    //         });
+    //     }else{
+    //         console.log("empty")
+    //     }
+    // }); 
             
     //readonly for type regular and editable rate for type='other'                     
     $(document).ready(function () {
         $('.type').each(function () {
-        const sel =$(this).val();
-       
-        if(sel =='Regular'){
-            $(this).closest('tr').find('.rate').prop('readonly', true);
-      
-        }else{
-            $(this).closest('tr').find('.rate').prop('readonly', false);
-        }
+            const sel =$(this).val();
+        
+            if(sel =='Regular'){
+                $(this).closest('tr').find('.rate').prop('readonly', true);
+        
+            }else{
+                $(this).closest('tr').find('.rate').prop('readonly', false);
+            }
 
         });
     });

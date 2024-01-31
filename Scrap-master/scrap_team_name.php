@@ -4,7 +4,7 @@ include('../includes/header.php');
 
 
 // Read Name Data from Database
-$sql = "SELECT * FROM scrap_team where isDelete = '0'";
+$sql = "SELECT * FROM scrap_team where isDelete = '0' ";
 $result = sqlsrv_query($conn, $sql);
 
 ?>
@@ -75,10 +75,12 @@ $result = sqlsrv_query($conn, $sql);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) { ?>
+                    <?php 
+                    $sr=1;
+                    while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) { ?>
                         <tr>
                             <th scope="row">
-                                <?php echo $row['id'] ?>
+                                <?php  echo $sr ?>
                             </th>
                             <td>
                                 <?php echo $row['name'] ?>
@@ -91,7 +93,9 @@ $result = sqlsrv_query($conn, $sql);
                                     class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
-                    <?php } ?>
+                    <?php 
+                $sr++;
+                } ?>
                 </tbody>
             </table>
         </div>

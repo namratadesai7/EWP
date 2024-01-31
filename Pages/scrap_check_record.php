@@ -8,9 +8,10 @@ if (isset($_POST['fdate']) && isset($_POST['tdate']) && isset($_POST['wscale']))
     $fdate = $_POST['fdate'];
     $tdate = $_POST['tdate'];
     $wscale = $_POST['wscale'];
+    $tname=$_POST['tname'];
 
     // Perform a database query to check if the record exists
-    $sql ="SELECT COUNT(*) AS count FROM scraphead WHERE Fromdate = '$fdate' AND Todate = '$tdate' AND wt_scale='$wscale'";
+    $sql ="SELECT COUNT(*) AS count FROM scraphead WHERE Fromdate = '$fdate' AND Todate = '$tdate' AND wt_scale='$wscale' and Teamname='$tname' ";
     $run = sqlsrv_query($conn,$sql);
     
     if ($run) {

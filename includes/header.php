@@ -93,6 +93,24 @@ include('dbcon.php');
                         <a href="../Pages/drumshift.php" class="link_name"></i>Drum Shiffting</a>
                     </div>
                 </li>
+
+                <li>
+                    <a href="../Pages/challan.php" id="challan" class="menu-link"><i class="fa-solid fa-drum-steelpan "></i>
+                        <span>Challan</span>
+                    </a>
+                    <div class="sub-menu">
+                        <a href="../Pages/challan.php" class="link_name"></i>Challan</a>
+                    </div>
+                </li>
+
+                <li>
+                    <a href="../Pages/othershift.php" id="oshift" class="menu-link"><i class="fa-solid fa-drum-steelpan "></i>
+                        <span>Other Shiffting</span>
+                    </a>
+                    <div class="sub-menu">
+                        <a href="../Pages/othershift.php" class="link_name"></i>Other Shiffting</a>
+                    </div>
+                </li>
                 <li>
                     <a href="../Pages/scrapdata.php" id="sdata" class="menu-link"><i class="fa-regular fa-square-plus me-3"></i>
                         <span>Scrap Data</span>
@@ -144,6 +162,19 @@ include('dbcon.php');
                         <a href="../Drum-master/drum_unit.php" class="sub-item" id="dUnit">8. &nbsp;Unit</a>
                     </div>
                 </li>
+
+                <li>
+                    <a class="sub-btn drop-menu" href="#" id="Mmaster">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Other Master</span>
+                        <i class="fas fa-angle-right dropdown"></i>
+                    </a>
+                    <div class="sub-menu" id="mMenu">
+                        <a href="#" class="link_name">Other Master</a>
+                        <a href="../Other-master/work.php" class="sub-item" id="mUnload">0. &nbsp;Other Shifting</a>
+                    </div>
+                </li>
+
                 <li>
                     <a class="sub-btn drop-menu" href="#" id="Mmaster">
                         <i class="fa-solid fa-database"></i>

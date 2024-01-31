@@ -1,6 +1,7 @@
 <?php
 include('../includes/dbcon.php');
-include('../includes/header.php');  
+include('../includes/header.php');
+$date=date('Y-m-d');  
 
 $sql="SELECT MAX(Challanno) AS ch FROM Dshift";
 $run=sqlsrv_query($conn,$sql);
@@ -65,7 +66,7 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
 
             <div class="divCss">
                 <div class="row px-2">
-                    <label class="form-label col-lg-3 col-md-6" for="wscale">Weight Scale
+                    <!-- <label class="form-label col-lg-3 col-md-6" for="wscale">Weight Scale
                         <select  class="form-select wscale" name="wscale" id="wscale" required>
                             <option disabled selected value="">--Select--</option>
                             <option value="1">Weight Scale-1</option>
@@ -74,18 +75,18 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                             <option value="4">Weight Scale-4</option>
                             <option value="5">Weight Scale-5</option>
                         </select>
+                    </label> -->
+
+                    <label class="form-label col-lg-3 col-md-6" for="fdate">Date
+                        <input class="form-control fdate" type="date" id="fdate" name="fdate" value="<?php echo $date ?>" required >      
+                        <!-- <p id="alert"  style="color:red;"></p>   -->
+                        <!-- <input type="hidden" id="maxdate">                 -->
                     </label>
 
-                    <label class="form-label col-lg-3 col-md-6" for="fdate">From Date
-                        <input class="form-control fdate" type="date" id="fdate" name="fdate" onchange="checkDateSelection()" required >      
-                        <p id="alert"  style="color:red;"></p>  
-                        <input type="hidden" id="maxdate">                
-                    </label>
-
-                    <label class="form-label col-lg-3 col-md-6" for="tdate">To Date
+                    <!-- <label class="form-label col-lg-3 col-md-6" for="tdate">To Date
                         <input class="form-control tdate" type="date" id="tdate" name="tdate" onchange="checkDateSelection()"required >
                         <p id="alertMessage" style="color: red;"></p>
-                    </label>
+                    </label> -->
                     
                     <label class="form-label col-lg-3 col-md-6" for="month">Month
                         <input class="form-control" type="text" id="month" name="month" value=""  readonly required>
@@ -102,10 +103,10 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                     </label>
                     
                     <label class="form-label col-lg-3 col-md-6" for="tname">Team Name
-                        <select  class="form-select" name="tname" id="tname" required>
+                        <select  class="form-select tname" name="tname" id="tname" required>
                             <option disabled selected value="">--Select--</option>
                             <?php
-                            $sql1="SELECT name FROM scrap_team";
+                            $sql1="SELECT name FROM scrap_team where isDelete='0'";
                             $run1=sqlsrv_query($conn,$sql1);
                             while($row1=sqlsrv_fetch_array($run1,SQLSRV_FETCH_ASSOC)){
                             ?>
@@ -133,38 +134,7 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                     <div class="col ms-2"> <button type="button"  id="addRowBtn" class="btn  rounded-pill btn-danger mt-2"  >Add</button></div>                
                 </div>    
                 <div id="showdata">
-                    <!-- <table  class="table table-bordered text-center mb-0" id="scrapTable" >
-                        <thead class="bg-secondary text-light">
-                            <th>Type</th>
-                            <th>Name</th>
-                            <th>Remark</th>
-                            <th>Qnty</th>
-                            <th>Rate</th>
-                            <th>Amount</th>   
-                            <th></th>                  
-                        </thead>
-                        <tbody>                  
-                            <?php                          
-                            $name=array('Bare Cu','Tin Cu','Alu','PVC','XLPE','GI','Tape','PVC-D(RE-OUT)');
-                            $name1=array('bare_cu','tin_cu','alu','pvc','xlpe','gi','tape_r','pvc_d');
-                            // $rate=array('6','6','5','3','3','2','0','2');
-                            $qty=array();
-                            for($i=0;$i<8;$i++){                
-                            ?>
-                            <tr>                    
-                                <td><input type="text"  name="type[]" value="Regular"></td>
-                                <td><input  class="name" type="text"  name="name[]" value="<?php echo $name[$i]   ?>"></td>
-                                <td><input type="text"  class="rem" name="rem[]" ></td>
-                                <td><input step="0.01" class="qty" type="number"  name="qty[]"></td>
-                                <td><input  class="rate" type="number"  name="rate[]" > </td>
-                                <td><input class="amt" type="number" name="amt[]"  readonly></td>
-                                <td></td>
-                            </tr>
-                            <?php
-                            }                      
-                            ?>                      
-                        </tbody>
-                    </table>   -->
+                    
                 </div>
             </div>
         </form>
@@ -181,159 +151,170 @@ include('../includes/footer.php');
 
         $('#sdata').addClass('active');
 
-        function checkdate(button){ 
-            console.log("test")
-            var fromdate = $('#fdate').val();
-            var todate = $('#tdate').val();
-            var mindate=$('#maxdate').val();
+        // function checkdate(button){ 
+        //     console.log("test")
+        //     var fromdate = $('#fdate').val();
+        //     var todate = $('#tdate').val();
+        //     var mindate=$('#maxdate').val();
+        //     console.log('mindate');
 
 
-            var fromDateObj = new Date(fromdate);
-                var mindateObj = new Date(mindate);
+        //     var fromDateObj = new Date(fromdate);
+        //         var mindateObj = new Date(mindate);
+           
+        //     if(mindate=='1900-01-01')    {
+        //        console.log("sdf")
+        //     }
+        //     else  {
+        //         if( fromDateObj<= mindateObj  ){
+        //             console.log("sds")
+        //         alert("From Date must be greater than '" + mindate);
+        //         event.preventDefault(); // Prevent form submission
+        //         }
+               
+        //     } 
+          
+        // }
 
-            if ( fromDateObj<= mindateObj) {
-                console.log("sds")
-                alert("From Date must be greater than '" + mindate);
-                event.preventDefault(); // Prevent form submission
-            } 
+        // $(document).on("click", ".datechange", function () {
+        //     // Traverse the DOM to find the parent row
+        //     var alert = document.getElementById("alert");
+        //     alert.textContent = " "; 
+        //     var fromdate = $(this).attr('id');
+        //     var todate = $(this).data('todate');
+        //     $('#fdate').val(fromdate);
+        //     $('#tdate').val(todate);
 
+        //     $('#fdate').prop('readonly', true);
+        //     $('#tdate').prop('readonly', true);
 
-
-        }
-
-        $(document).on("click", ".datechange", function () {
-            // Traverse the DOM to find the parent row
-            var alert = document.getElementById("alert");
-            alert.textContent = " "; 
-            var fromdate = $(this).attr('id');
-            var todate = $(this).data('todate');
-            $('#fdate').val(fromdate);
-            $('#tdate').val(todate);
-
-            $('#fdate').prop('readonly', true);
-            $('#tdate').prop('readonly', true);
-
-            var fdate = $('#fdate').val();
-            var tdate = $('#tdate').val();
-            var wscale=$('#wscale').val();
-            var month=$('#month').val();
+        //     var fdate = $('#fdate').val();
+        //     var tdate = $('#tdate').val();
+        //     var wscale=$('#wscale').val();
+        //     var month=$('#month').val();
          
     
-            if (fdate!='' && tdate!='' && wscale!=''  && wscale!=null) {
+        //     if (fdate!='' && tdate!='' && wscale!=''  && wscale!=null) {
          
-                // Check if the record already exists in the database
-                $.ajax({
-                    url: 'scrap_check_record.php', // Create a new PHP file for checking if the record exists
-                    type: 'post',
-                    data: {
-                        fdate: fdate,
-                        tdate: tdate,
-                        wscale:wscale
-                    },
-                    success: function (data) {
-                        if (data === "exists") {
-                            // If the record exists, redirect to the edit page for that record
-                            window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;
-                         //   window.location.href = 'summary_edit.php?param2=' + month + '&param1=' + cont;
-                        } else {
-                            // If the record doesn't exist, load the form for adding a new record
-                           // window.location.href = 'scrapdata_add.php';    
+        //         // Check if the record already exists in the database
+        //         $.ajax({
+        //             url: 'scrap_check_record.php', // Create a new PHP file for checking if the record exists
+        //             type: 'post',
+        //             data: {
+        //                 fdate: fdate,
+        //                 tdate: tdate,
+        //                 wscale:wscale
+        //             },
+        //             success: function (data) {
+        //                 if (data === "exists") {
+        //                     // If the record exists, redirect to the edit page for that record
+        //                     window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;
+        //                  //   window.location.href = 'summary_edit.php?param2=' + month + '&param1=' + cont;
+        //                 } else {
+        //                     // If the record doesn't exist, load the form for adding a new record
+        //                    // window.location.href = 'scrapdata_add.php';    
                             
-                           console.log(data)                    
-                        }
-                    },
-                    error: function (res) {
-                    }
-                });
-                }
+        //                    console.log(data)                    
+        //                 }
+        //             },
+        //             error: function (res) {
+        //             }
+        //         });
+        //         }
 
-        });
+        // });
 
-        $(document).on("change", ".fdate,.tdate,.wscale", function () {
-            var fdate = $('#fdate').val();
-            var tdate = $('#tdate').val();
-            var wscale=$('#wscale').val();
-            var month=$('#month').val();
-            var fromDateObj = new Date(fdate);
+        // $(document).on("change", ".fdate,.tdate,.wscale,.tname", function () {
+          
+        //     var fdate = $('#fdate').val();
+        //     var tdate = $('#tdate').val();
+        //     var wscale=$('#wscale').val();
+        //     var month=$('#month').val();
+        //     var tname=$('#tname').val();
+         
+        //     var fromDateObj = new Date(fdate);
                
     
-            if (fdate!='' && tdate!='' && wscale!=''  && wscale!=null) {
+        //     if (fdate!='' && tdate!='' && wscale!=''  && wscale!=null  &&  tname!='') {
          
-                // Check if the record already exists in the database
-                $.ajax({
-                    url: 'scrap_check_record.php', // Create a new PHP file for checking if the record exists
-                    type: 'post',
-                    data: {
-                        fdate: fdate,
-                        tdate: tdate,
-                        wscale:wscale
-                    },
-                    success: function (data) {
-                        if (data === "exists") {
-                            // If the record exists, redirect to the edit page for that record
-                            window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;
-                         //   window.location.href = 'summary_edit.php?param2=' + month + '&param1=' + cont;
-                        } else {
-                            // If the record doesn't exist, load the form for adding a new record
-                           // window.location.href = 'scrapdata_add.php';    
+        //         // Check if the record already exists in the database
+        //         $.ajax({
+        //             url: 'scrap_check_record.php', // Create a new PHP file for checking if the record exists
+        //             type: 'post',
+        //             data: {
+        //                 fdate: fdate,
+        //                 tdate: tdate,
+        //                 wscale:wscale,
+        //                 tname:tname
+        //             },
+        //             success: function (data) {
+        //                 if (data === "exists") {
+        //                     // If the record exists, redirect to the edit page for that record
+        //                     window.location.href = 'scrapdata_edit.php?param1=' + fdate + '&param2=' + tdate + '&param3=' + wscale;
+        //                  //   window.location.href = 'summary_edit.php?param2=' + month + '&param1=' + cont;
+        //                 } else {
+        //                     // If the record doesn't exist, load the form for adding a new record
+        //                    // window.location.href = 'scrapdata_add.php';    
                             
-                           console.log(data)                    
-                        }
-                    },
-                    error: function (res) {
-                    }
-                });
-                }
-                else{
-                    if(month!='' &&  wscale!=''  && wscale!=null ){
-                        var alert = document.getElementById("alert");
+                                      
+        //                 }
+        //             },
+        //             error: function (res) {
+        //             }
+        //         });
+        //         }
+               
+        //             if(month!='' &&  wscale!=''  && wscale!=null &&  tname!=''){
+        //                 var alert = document.getElementById("alert");
                     
-                        $.ajax({
-                            url: 'scrap_check_record1.php', // Create a new PHP file for checking if the record exists
-                            type: 'post',
-                            dataType: "json",
-                            data: {mon:month,ws:wscale},
-                            success: function (data) {
-                                var tableData = data.tableData;
+        //                 $.ajax({
+        //                     url: 'scrap_check_record1.php', // Create a new PHP file for checking if the record exists
+        //                     type: 'post',
+        //                     dataType: "json",
+        //                     data: {mon:month,ws:wscale,tname:tname},
+        //                     success: function (data) {
+        //                         var tableData = data.tableData;
 
-                                // Access count value
-                                var t = data.t;
+        //                         // Access count value
+        //                         var t = data.t;
                                
                                
-                                $('#showrec').html(data.table);
-                                 if(t!=''){
+        //                         $('#showrec').html(data.table);
+        //                          if(t!=''){
                                   
-                                //     // Adding one day to the date 't'
-                                    var tDate = new Date(t);
+        //                         //     // Adding one day to the date 't'
+        //                             var tDate = new Date(t);
 
-                                    // tDate.setDate(tDate.getDate() + 1);
+        //                             // tDate.setDate(tDate.getDate() + 1);
 
-                                //     // Format the new date as 'yyyy-MM-dd'
-                                    var newFdate = tDate.toISOString().split('T')[0];
-                                //         if ( fromDateObj<= tDate) {
-                                //             alert.textContent = "'From Date must be greater than '" + t; 
-                                //             document.getElementById('fdate').setAttribute("min", newFdate);
-                                //         } 
+        //                         //     // Format the new date as 'yyyy-MM-dd'
+        //                             var newFdate = tDate.toISOString().split('T')[0];
+        //                         //         if ( fromDateObj<= tDate) {
+        //                         //             alert.textContent = "'From Date must be greater than '" + t; 
+        //                         //             document.getElementById('fdate').setAttribute("min", newFdate);
+        //                         //         } 
 
-                                //     // Set the new date to the fdate input
-                                 $('#maxdate').val(newFdate);
-                                   
+        //                         //     // Set the new date to the fdate input
+        //                         console.log(newFdate);
+                                
+        //                          $('#maxdate').val(newFdate);
+                                
+                                
+        //                          }
+        //                         // else{
+        //                         //     alert.textContent = " "; 
+        //                         //      $('#fdate').val(newFdate );
 
-                                 }
-                                // else{
-                                //     alert.textContent = " "; 
-                                //      $('#fdate').val(newFdate );
-
-                                // }
+        //                         // }
                               
-                            },
-                            error: function (res) {
-                                console.log(res);
-                            }
-                        });
-                    }
-                }
-        });
+        //                     },
+        //                     error: function (res) {
+        //                         console.log(res);
+        //                     }
+        //                 });
+        //             }
+                
+        // });
       
   
         $(document).on('focusout','.qty',function(){
@@ -394,38 +375,24 @@ include('../includes/footer.php');
             }
         });
 
+      
         // function checkDateSelection() {
         //     var fromDate = document.getElementById("fdate").value;
         //     var toDate = document.getElementById("tdate").value;
         //     var alertMessage = document.getElementById("alertMessage"); 
         //     var alert = document.getElementById("alert");
-                   
-
-        //     if (fromDate === "" || toDate === "") {
-        //         alertMessage.textContent = "'To Date' must be grater than 'From Date'";         
-        //     } 
-        //     else {
-        //         alertMessage.textContent = "";
-        //         alert.textContent = " ";
-        //     }
-        // }
-        function checkDateSelection() {
-            var fromDate = document.getElementById("fdate").value;
-            var toDate = document.getElementById("tdate").value;
-            var alertMessage = document.getElementById("alertMessage"); 
-            var alert = document.getElementById("alert");
 
         
-                var fromDateObj = new Date(fromDate);
-                var toDateObj = new Date(toDate);
+        //         var fromDateObj = new Date(fromDate);
+        //         var toDateObj = new Date(toDate);
 
-                if (toDateObj <= fromDateObj) {
-                    alertMessage.textContent = "'To Date' must be greater than 'From Date'";
-                } else {
-                    alertMessage.textContent = "";
+        //         if (toDateObj <= fromDateObj) {
+        //             alertMessage.textContent = "'To Date' must be greater than 'From Date'";
+        //         } else {
+        //             alertMessage.textContent = "";
                    
-                }
-            }
+        //         }
+        //     }
      
 
         $(document).ready(function() {
@@ -586,30 +553,59 @@ include('../includes/footer.php');
                 }
             });
         });
-        
+        $(document).ready(function(){
+            const selectedDate = $('#fdate').val();
+            const dateParts = selectedDate.split('-'); // Assuming date format is YYYY-MM-DD
+
+            if (dateParts.length === 3) {
+                const year = parseInt(dateParts[0]);
+                const month = parseInt(dateParts[1]);
+                const day = parseInt(dateParts[2]);
+
+                // Check if the date is valid
+                if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+                    // Create a Date object and set the selected date
+                    const date = new Date(year, month - 1, day); // Month is 0-based, so subtract 1
+
+                    // Get the full month name
+                    const fullMonthName = date.toLocaleString('default', { month: 'long' });
+
+                    // Set the full month name in the #month input
+                    $('#month').val(fullMonthName);
+                } else {
+                    // Handle invalid date input
+                    $('#month').val('');
+                }
+            } else {
+                // Handle invalid date input
+                $('#month').val('');
+            }
+
+
+        })
    // disable dates
-    var today= new Date();
-    var last = new Date();
-    last.setDate(today.getDate() - 30);
+    // var today= new Date();
+    // var last = new Date();
+    // last.setDate(today.getDate() - 30);
 
-        var d = today.getDate();
-        var m = today.getMonth() +1;
-        var y = today.getFullYear();
+    //     var d = today.getDate();
+    //     var m = today.getMonth() +1;
+    //     var y = today.getFullYear();
      
-        if(d<10){   
-        d='0'+d;
-        }
-        if(m<10){
-        m='0'+ m;
-        }
-        today = y+ '-' + m + '-' + d ;
-        last = last.toISOString().split('T')[0];
+    //     if(d<10){   
+    //     d='0'+d;
+    //     }
+    //     if(m<10){
+    //     m='0'+ m;
+    //     }
+    //     today = y+ '-' + m + '-' + d ;
+    //     last = last.toISOString().split('T')[0];
 
-        document.getElementById('fdate').setAttribute("max", today);
-        document.getElementById('fdate').setAttribute("min", last);
+    //     document.getElementById('fdate').setAttribute("max", today);
+    //     document.getElementById('fdate').setAttribute("min", last);
 
-        document.getElementById('tdate').setAttribute("max", today);
-        document.getElementById('tdate').setAttribute("min", last);
+    //     document.getElementById('tdate').setAttribute("max", today);
+    //     document.getElementById('tdate').setAttribute("min", last);
  
 </script>
 

@@ -3,8 +3,8 @@ include('../includes/dbcon.php');
 include('../includes/header.php');
 
 
-// Read  Data from Database
-$sql = "SELECT * FROM drum_name where isDelete = '0' ORDER BY name";
+// Read Material Unloading Data from Database
+$sql = "SELECT * FROM other_work where isDelete = '0'";
 $result = sqlsrv_query($conn, $sql);
 
 ?>
@@ -25,11 +25,10 @@ $result = sqlsrv_query($conn, $sql);
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col">
-                <h4 class="pt-2 mb-0">Name</h4>
+                <h4 class="pt-2 mb-0">Material Unloading Name</h4>
             </div>
             <div class="col-auto">
-                <button class="btn rounded-pill common-btn add-new" data-bs-toggle="modal" data-bs-target="#addModal"
-                    href="drum_name_db.php">+
+                <button class="btn rounded-pill common-btn add-new" data-bs-toggle="modal" data-bs-target="#addModal">+
                     Add New</button>
             </div>
         </div>
@@ -68,34 +67,35 @@ $result = sqlsrv_query($conn, $sql);
         <div class="divCss">
             <table class="table table-bordered text-center mb-0">
                 <thead>
-                    <tr>
-                        <th class="bg-light">Sr</th>
-                        <th class="bg-light"> Name</th>
-                        <th class="bg-light">Action</th>
+                    <tr class="bg-light">
+                        <th>Sr</th>
+                        <th>Work</th>
+                        <th>Rate</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
-                    $sr=1;
-                    while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) { ?>
+                    <?php while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) { ?>
                         <tr>
                             <th scope="row">
-                                <?php echo $sr ?>
+                                <?php echo $row['id'] ?>
                             </th>
                             <td>
-                                <?php echo $row['name'] ?>
+                                <?php echo $row['workdet'] ?>
+                            </td>
+                            <td>
+                                <?php echo $row['rate'] ?>
                             </td>
                             <td class="tdCss">
                                 <button class="btn btn-primary btn-sm edit" id=<?php echo $row['id'] ?>
-                                    data-name="<?php echo $row['name'] ?>">Edit</button>
-                                <a href="drum_name_db.php?deleteid=<?php echo $row['id'] ?>"
+                                    data-name="<?php echo $row['workdet'] ?>"
+                                    data-rate="<?php echo $row['rate'] ?>">Edit</button>
+                                <a href="work_db.php?deleteid=<?php echo $row['id'] ?>"
                                     onclick="return confirm('Are you sure?')" name="delete"
                                     class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
-                    <?php
-                $sr++;
-                 } ?>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>
@@ -105,12 +105,19 @@ $result = sqlsrv_query($conn, $sql);
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Name</h5>
+                    <h5 class="modal-title">Add Work Name</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form class="modal-body" id="addForm" action="drum_name_db.php" method="post">
-                    <label for="name">Name</label>
-                    <input type="text" name="name" id="name" placeholder="Enter Name" class="form-control" required>
+                <form class="modal-body" id="addForm" action="work_db.php" method="post">
+                    <div class="mb-3">
+                        <label for="name">Work</label>
+                        <input type="text" name="work" id="work" placeholder="Enter work"
+                            class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="u_rate">Rate</label>
+                        <input type="number" name="rate" id="rate" placeholder="Enter Rate" class="form-control" required>
+                    </div>
                 </form>
                 <div class="modal-footer">
                     <button type="submit" name="submit" class="btn common-btn btn-sm" form="addForm">Submit</button>
@@ -124,13 +131,19 @@ $result = sqlsrv_query($conn, $sql);
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Name</h5>
+                    <h5 class="modal-title">Edit Work Name</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form class="modal-body" id="editForm" action="drum_name_db.php" method="post">
-                    <label for="name">Name</label>
-                    <input type="text" id="editName" name="editName" class="form-control" required>
+                <form class="modal-body" id="editForm" action="work_db.php" method="post">
                     <input type="hidden" id="editId" name="editId">
+                    <div class="mb-3">
+                        <label for="material">Work Name</label>
+                        <input type="text" id="editMaterial" name="editMaterial" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="u_rate">Rate</label>
+                        <input type="number" id="editRate" name="editRate" class="form-control" required>
+                    </div>
                 </form>
                 <div class="modal-footer">
                     <button type="submit" name="update" class="btn common-btn btn-sm" form="editForm">Submit</button>
@@ -142,13 +155,15 @@ $result = sqlsrv_query($conn, $sql);
 
 </html>
 <script>
-    $('#dName').addClass('active');
-    $('#drumMenu').addClass('showMenu');
+     $('#mUnload').addClass('active');
+    $('#mMenu').addClass('showMenu');
     $(document).on('click', '.edit', function () {
         var editid = $(this).attr('id');
-        var name = $(this).data('name');
+        var material = $(this).data('name');
+        var u_rate = $(this).data('rate');
         $('#editId').val(editid);
-        $('#editName').val(name);
+        $('#editMaterial').val(material);
+        $('#editRate').val(u_rate);
         $('#editModal').modal('show');
     });
 </script>
