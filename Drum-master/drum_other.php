@@ -151,7 +151,7 @@ $result = sqlsrv_query($conn, $sql);
 
 </html>
 <script>
-    $('#other').addClass('active');
+    $('#others').addClass('active');
     $('#drumMenu').addClass('showMenu');
     $(document).on('click', '.edit', function () {
         var editid = $(this).attr('id');

@@ -24,7 +24,7 @@ include('../includes/dbcon.php');
                           
                             $sql="SELECT DISTINCT(Challanno),Date,Name_of_contractor FROM Dshift where format(Date,'MM')='$mon'
                              and format(Date,'yyyy')='$year' and (Type='drums' or Type is null)  and Challanno  in (select distinct(Challanno) from Challan)
-                             order by Date desc";
+                             and Type='drums' order by Date desc";
                             $run=sqlsrv_query($conn,$sql);
                             $printedSrNos = array();
                             while($row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC)){
@@ -36,7 +36,8 @@ include('../includes/dbcon.php');
                                 <td ><?php echo $row['Date']->format('d-m-Y')  ?></td>
                                 <td class="tname" ><?php echo $row['Name_of_contractor']  ?></td>                
                                 <td  class="tdCss" ><a class="btn rounded-pill btn-warning btn-sm view" id="<?php echo $row['Challanno'] ?>" disabled  >View</a>
-                                      </td>
+                                <a href="challanpdf.php?pdf=<?php echo $row['Challanno']?>" style="font-size: 12px;" class="btn btn-danger btn-sm rounded-pill" target="_blank">Pdf</a>          
+                            </td>
                             </tr>
                         <?php
                       $sr++; 

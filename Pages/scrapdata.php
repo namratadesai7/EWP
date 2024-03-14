@@ -54,18 +54,43 @@ $year=date('Y');
         #scrapTable td {
             text-align: center;
         }
+         
+       .abc{
+        display:flex;
+        max-width:250px;
+       }
+       div .add{
+        max-width:200px;
+       }
+       .mondiv{
+        max-width:210px;
+       }
     </style>
 </head>
 <body>
     <div class="container-fluid fl ">
         <div class="row mb-3">
             <div class="col"><h4 class="pt-2 mb-0">Scrap Data</h4></div>
-            <div class="col-auto">
-                    <input class="form-control" type="month" name="month" id="month" >
-                </div>
-            <div class="col-auto"> <a  class="btn rounded-pill common-btn" href="scrapdata_add.php">+Add</a></div>
+      
+            
         </div>
-        <div class="divCss ">
+        <div class="row">
+            <div class="col mondiv ">
+                    <input  class="form-control add" type="month" name="month" id="month" >
+            </div>
+            <div class="col ">
+                 <a  class="btn rounded-pill common-btn" href="scrapdata_add.php">+Add</a>
+            </div>
+            <div class="col-auto  ">
+                <form action="scrap_getexcel.php" method="POST" >
+                    <div class="abc">
+                        <input style="width:250px;" type="month" id="monthh" class="form-control"  name="month">
+                        <button type="submit" class="btn rounded-pill common-btn mx-1 getexcel ms-3" name="getexcel" >Export</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="divCss mt-2 ">
             <div  id="showdata">
             <table class="table table-bordered text-center table-striped table-hover mb-0" id="scrapTable">
                 <thead>
@@ -153,6 +178,9 @@ $year=date('Y');
 </html>
 <script>
      $('#sdata').addClass('active');
+
+
+
 
     var currentDate = new Date();
     // Get the current month and year

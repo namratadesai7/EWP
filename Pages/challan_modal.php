@@ -18,7 +18,7 @@ $challanno=$_POST['challanno'];
             padding:0px !important;
         }
       #challanmodaltab
-{
+    {
             overflow-y: scroll; 
             overflow-x:none;
             max-height: 500px; 
@@ -30,17 +30,18 @@ $challanno=$_POST['challanno'];
             white-space:nowrap;
     }
 </style>
+
 <div class="row">
 <div class="col"></div>
 <div class="col-auto">
-<input type="checkbox" id="checkAll"> Check All
+<!-- <input type="checkbox" id="checkAll"> Check All -->
+<button class="btn-sm btn-primary mb-2 rounded-pill" id="checkAll" >CheckAll</button>
 </div>
 </div>
 
 <form id="verform">
     <table class="table table-bordered text-center table-striped table-hover mt-7" id="challanmodaltab">
-
-   <thead>
+    <thead>
         <tr class="bg-secondary text-light">
             <th>Sr No.</th>
             <th>Chal. No.</th>
@@ -53,8 +54,8 @@ $challanno=$_POST['challanno'];
             <th>Drum No.</th>    
             <th>Verify</th>
          </tr>
-   </thead> 
-   <tbody>
+    </thead> 
+    <tbody>
         <?php
         $sr=1;
             $sql="SELECT d.Challanno,d.id,d.Date,d.Name_of_contractor, d.Name,d.From_Plant
@@ -79,7 +80,7 @@ $challanno=$_POST['challanno'];
                 <td><?php echo $row['Drum_series']  ?></td>
                 <td><?php echo $row['Drum_No']  ?></td>
                 <td><input type="checkbox" class="verf" disabled >
-                <input type="number" class="checkbox-state" name="checkbox_state[]" value="<?php echo $is_set ?>" ></td>
+                <input type="hidden" class="checkbox-state" name="checkbox_state[]" value="<?php echo $is_set ?>" ></td>
             </tr> 
         <?php 
         $sr++; }
@@ -89,64 +90,42 @@ $challanno=$_POST['challanno'];
 </table>
 </form>
 <script>
-        $(document).ready(function(){
-        // Event handler for the checkbox at the top
-        $('#checkAll').change(function() {
+       $(document).ready(function(){
+        // Event handler for the "Check All" button
+        $('#checkAll').click(function() {
             // Select all checkboxes in the rows and update their checked state
-            $('.verf').prop('checked', $(this).prop('checked'));
-            const isChecked = $(this).is(':checked');
-            if (!isChecked) {
-                $('.checkbox-state').val(0);
-            } else {
-                $('.checkbox-state').val(1);
-            }
+            $('.verf').prop('checked', true);
+            $('.checkbox-state').val(1);
+            $(this).closest('tr').find('.checkbox-state').val(isChecked ? 1 : 0);
         });
-    
-//         $('.verf').change(function() {
-//         const isChecked = $(this).is(':checked');
-      
-       
-//             if (!isChecked) {
-              
-//                 $(this).closest('tr').find('.checkbox-state').val(0);
-//             } else {
-              
-//                 $(this).closest('tr').find('.checkbox-state').val(1);
-//             }
 
-         
-      
-//     });
-//     $(document).ready(function(){
-    // Select all checkboxes with the class 'verf'
-    const checkboxes = $('.verf');
-
-    checkboxes.each(function() {
-        // Find the corresponding hidden input for each checkbox
-        const hiddenInput = $(this).closest('tr').find('.checkbox-state');
-        
-        // Check the checkbox based on the value of the hidden input
-        if (hiddenInput.val() == 1) {
-            $(this).prop('checked', true);
-        }
-    });
-// });
-
-    //    $(document).ready(function(){
-        // Event handler for the checkbox at the top
-        // $('#checkAll').change(function() {
+   
+        // $(document).ready(function(){
+        // // Event handler for the checkbox at the top
+        // $('#checkAll').click(function() {
         //     // Select all checkboxes in the rows and update their checked state
         //     $('.verf').prop('checked', $(this).prop('checked'));
         //     const isChecked = $(this).is(':checked');
         //     if (!isChecked) {
-              
-        //       $('.checkbox-state').val(0);
-        //   } else {
-            
-        //       $('.checkbox-state').val(1);
-        //   }
-
+        //         $('.checkbox-state').val(0);
+        //     } else {
+        //         $('.checkbox-state').val(1);
+        //     }
         // });
+
+    // Select all checkboxes with the class 'verf'
+    // const checkboxes = $('.verf');
+
+    // checkboxes.each(function() {
+    //     // Find the corresponding hidden input for each checkbox
+    //     const hiddenInput = $(this).closest('tr').find('.checkbox-state');
+        
+    //     // Check the checkbox based on the value of the hidden input
+    //     if (hiddenInput.val() == 1) {
+    //         $(this).prop('checked', true);
+    //     }
+    // });
+
 
         var table = $('#challanmodaltab').DataTable({
             "processing": true,                  //This option enables the processing indicator to be shown while the table is being processed

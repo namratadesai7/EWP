@@ -49,7 +49,7 @@ include('dbcon.php');
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
 
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.12.1/datatables.min.js"></script>
@@ -70,7 +70,6 @@ include('dbcon.php');
 </head>
 
 <body>
-
     <input type="checkbox" id="nav-toggle">
     <div class="sidebar">
         <div class="sidebar-brand">
@@ -151,12 +150,12 @@ include('dbcon.php');
                     </a>
                     <div class="sub-menu" id="drumMenu">
                     <a href="../Drum-master/drum_contractor.php" class="sub-item" id="dCon">0.
-                            &nbsp;Name of Contractor</a>
+                            &nbsp;Name of Sub Contractor</a>
                         <a href="../Drum-master/drum_name.php" class="sub-item" id="dName">1. &nbsp; Name</a>
                         <a href="../Drum-master/drum_plant.php" class="sub-item" id="dPlant">2. &nbsp;Plant</a>
                         <a href="../Drum-master/drum_series.php" class="sub-item" id="dSeries">3. &nbsp;Drum Series</a>
                         <a href="../Drum-master/drum_material.php" class="sub-item" id="dmat">4. &nbsp;Material</a>
-                        <a href="../Drum-master/drum_other.php" class="sub-item" id="other">5. &nbsp;Other</a>
+                        <a href="../Drum-master/drum_other.php" class="sub-item" id="others">5. &nbsp;Other</a>
                         <a href="../Drum-master/drum_conductor.php" class="sub-item" id="dConductor">6. &nbsp;Conductor</a>
                         <a href="../Drum-master/drum_stage.php" class="sub-item" id="dStage">7. &nbsp;Stage</a>                      
                         <a href="../Drum-master/drum_unit.php" class="sub-item" id="dUnit">8. &nbsp;Unit</a>

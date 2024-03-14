@@ -28,7 +28,7 @@ $ser=$_POST['ser'];
     <tr>
         <?php
         $sr=1;
-            $sql="SELECT * FROM Dshift WHERE FORMAT(Date,'yyyy-MM') = '$mon' AND Drum_series='$ser' ";
+            $sql="SELECT * FROM Dshift WHERE FORMAT(Date,'yyyy-MM') = '$mon' AND Drum_series='$ser' and Name_of_contractor='RAMSAWARE' ";
             $run=sqlsrv_query($conn,$sql);
             while($row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC)){
                ?>

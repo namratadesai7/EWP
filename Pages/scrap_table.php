@@ -10,7 +10,7 @@ $year=$_POST['year'];
             <th>Sr</th>
             <th>Scrap Type</th>
             <th>From Date</th>
-            <th>To Date</th>
+            <!-- <th>To Date</th> -->
             <th>Month</th>
             <th>Team Name</th>
             <th>M.p</th>
@@ -38,9 +38,9 @@ $year=$_POST['year'];
                 //     FROM scraphead  where Month='$mon' and  format(Todate,'yyyy')='$year'
                 //     GROUP BY wt_scale
                 // ) and Month='$mon' and format(Todate,'yyyy')='$year' order by id desc ";
-                $sql="SELECT wt_scale, id, Typeofscrap,format(Fromdate,'yyyy-MM-dd') as fdate,format(Todate,'yyyy-MM-dd') as tdate,Month, Teamname, mp, Totalwt, Totalamt
+                $sql="SELECT wt_scale, id, Typeofscrap,format(Fromdate,'yyyy-MM-dd') as fdate,Month, Teamname, mp, Totalwt, Totalamt
                 FROM scraphead 
-                where Month='$mon' and format(Todate,'yyyy')='$year' order by wt_scale  ";
+                where Month='$mon' and format(Fromdate,'yyyy')='$year' order by wt_scale  ";
                 $run=sqlsrv_query($conn,$sql);
                 $printedSrNos = array();
                 while($row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC)){
@@ -59,7 +59,7 @@ $year=$_POST['year'];
                     <!-- <td><?php echo $row['head_id']  ?></td> -->
                     <td  ><?php if($row['Typeofscrap'] =='CP'){ echo "Control/Power"; }elseif($row['Typeofscrap'] =='IP'){ echo "Instru/Panni"; } else{echo "Other Extra";}   ?></td>
                     <td ><?php echo $row['fdate'] ?></td>
-                    <td ><?php echo $row['tdate']?></td>
+                    <!-- <td ><?php echo $row['tdate']?></td> -->
                     <td ><?php echo $row['Month']  ?></td>
                     <td ><?php echo $row['Teamname']  ?></td>
                     <td ><?php echo $row['mp']  ?></td>

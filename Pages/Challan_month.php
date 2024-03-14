@@ -20,7 +20,7 @@ $year=$_POST['year'];
                             $sr=1;
                           
                             $sql="SELECT DISTINCT(Challanno),Date,Name_of_contractor FROM Dshift where format(Date,'MM')='$mon'
-                             and format(Date,'yyyy')='$year' and (Type='drums' or Type is null)  and Challanno not in (select distinct(Challanno) from Challan) order by Date desc";
+                             and format(Date,'yyyy')='$year' and (Type='drums' or Type is null)  and Challanno not in (select distinct(Challanno) from Challan)and Type='drums'  order by Date desc";
                             $run=sqlsrv_query($conn,$sql);
                             $printedSrNos = array();
                             while($row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC)){
@@ -32,6 +32,7 @@ $year=$_POST['year'];
                                 <td ><?php echo $row['Date']->format('d-m-Y')  ?></td>
                                 <td class="tname" ><?php echo $row['Name_of_contractor']  ?></td>                
                                 <td  class="tdCss" ><a class="btn rounded-pill btn-warning btn-sm view" id="<?php echo $row['Challanno'] ?>"  >View</a>
+                                <a href="challanpdf.php?pdf=<?php echo $row['Challanno']?>" style="font-size: 12px;" class="btn btn-danger btn-sm rounded-pill" target="_blank">Pdf</a>
                                       </td>
                             </tr>
                         <?php

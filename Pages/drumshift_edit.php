@@ -121,16 +121,16 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                     </label>
 
                     <label  class="form-label col-lg-3 col-md-6" for="type">Type
-                        <select  class="form-select" name="type" id="type" required>
+                        <select  class="form-select" name="type" id="type" required  onchange="toggleRequired()"  >
                             <option disabled selected value=""></option>
                             <option <?php if($row['Type']=="drums") {?> selected <?php }  ?> value="drums">Drums</option>
-                            <option <?php if($row['Type']=="material") {?> selected <?php }  ?> value="material">Material</option>
-                            <option <?php if($row['Type']=="other") {?> selected <?php }  ?> value="other">Others</option>
+                            <option <?php if($row['Type']=="Raw Material") {?> selected <?php }  ?> value="Raw Material">Raw Material</option>
+                            <option <?php if($row['Type']=="Scrap/General") {?> selected <?php }  ?> value="Scrap/General">Scrap/General</option>
                         </select>
                     </label>
                     
                     <label  class="form-label  col-lg-3 col-md-6 stage" for="stage">Stage
-                        <select  class="form-select" name="stage" id="stage" >
+                        <select  class="form-select" name="stage" id="stage"  >
                             <option value=""></option>
                             <?php
                             $sql3="SELECT name FROM drum_stage where isDelete=0";
@@ -144,7 +144,7 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                     </label>
 
                     <label  class="form-label col-lg-3 col-md-6 material" for="material">Material
-                        <select  class="form-select" name="material" id="material" >
+                        <select  class="form-select" name="material" id="material"  >
                             <option disabled selected value=""></option>
                             <?php
                             $sql3="SELECT name FROM drum_material where isDelete=0";
@@ -157,7 +157,7 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                     </label>
 
                     <label  class="form-label col-lg-3 col-md-6 other" for="other">Other
-                        <select  class="form-select" name="other" id="other" >
+                        <select  class="form-select" id="other"  >
                             <option disabled selected value=""></option>
                             <?php
                             $sql3="SELECT name FROM drum_other where isDelete=0";
@@ -207,8 +207,10 @@ $row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC);
                     <label  class="form-label  col-lg-3 col-md-6 hideLabel" for="ctype">Conductor-Type
                         <select  class="form-select" name="ctype" id="ctype" >
                             <option value=""></option>
-                            <option <?php if($row['ConductorType']=="cu")   { ?> selected   <?php } ?>  value="cu" >CU</option>
-                            <option <?php if($row['ConductorType']=="alu")  { ?> selected   <?php } ?>  value="alu" >ALU</option>
+                            <option <?php if($row['ConductorType']=="ALU")  { ?> selected   <?php } ?>  value="ALU" >ALU</option>
+                            <option <?php if($row['ConductorType']=="COPPER")   { ?> selected   <?php } ?>  value="COPPER" >COPPER</option>
+                            <option <?php if($row['ConductorType']=="PVC FILLER")   { ?> selected   <?php } ?>  value="PVC FILLER" >PVC FILLER</option>
+                         
                         </select>
                     </label>
                     
@@ -243,6 +245,36 @@ include('../includes/footer.php');
 <script>
      $('#dshift').addClass('active');
 
+
+     $(document).ready(function(){
+       
+        var typeSelect = document.getElementById("type");
+        var stageSelect = document.getElementById("stage");
+        var materialSelect = document.getElementById("material");
+        var otherSelect= document.getElementById("other");    
+        var dseriesSelect = document.getElementById("dseries");
+
+        if (typeSelect.value === "drums") {
+            stageSelect.required = true;
+            materialSelect.required = false;
+            dseriesSelect.required= true;
+            otherSelect.required= false;
+
+        } else if (typeSelect.value === "Raw Material") {
+            stageSelect.required = false;
+            materialSelect.required = true;
+            dseriesSelect.required= false;
+            otherSelect.required= false;
+
+        } else if (typeSelect.value === "Scrap/General"){
+        
+            stageSelect.required = false;
+            materialSelect.required = false;
+            dseriesSelect.required= false;
+            otherSelect.required= true;
+    
+        }
+     })
     //disable dates
     var today= new Date();
      var last = new Date();
@@ -276,7 +308,7 @@ include('../includes/footer.php');
                 $('#tplant').val('');
             }
         });
-
+     
         $(document).ready(function(){
             var type = $('#type').val();
             if(type=='drums'){
@@ -285,21 +317,22 @@ include('../includes/footer.php');
                 $('.other').hide();
 
             }
-            if(type=='material'){
+            if(type=='Raw Material'){
                 $('.stage').hide();
                 $('.material').show();
                 $('.other').hide();
                 $('.hideLabel').hide();
 
             }
-            if(type=='other'){
+            if(type=='Scrap/General'){
                 $('.stage').hide();
                 $('.material').hide();
                 $('.other').show();
                 $('.hideLabel').hide();
 
             }
-        })
+
+        });
 
         $(document).on('change','#type',function(){
             var type = $(this).val();
@@ -310,14 +343,14 @@ include('../includes/footer.php');
                 $('.hideLabel').show();
 
             }
-            if(type=='material'){
+            if(type=='Raw Material'){
                 $('.stage').hide();
                 $('.material').show();
                 $('.other').hide();
                 $('.hideLabel').hide();
 
             }
-            if(type=='other'){
+            if(type=='Scrap/General'){
                 $('.stage').hide();
                 $('.material').hide();
                 $('.other').show();
@@ -326,19 +359,57 @@ include('../includes/footer.php');
             }
         })
 
+      
 
+        function toggleRequired() {
+        
+            var typeSelect = document.getElementById("type");
+            var stageSelect = document.getElementById("stage");
+            var materialSelect = document.getElementById("material");
+            var otherSelect= document.getElementById("other");    
+            var dseriesSelect = document.getElementById("dseries");
 
+            if (typeSelect.value === "drums") {
+                stageSelect.required = true;
+                materialSelect.required = false;
+                dseriesSelect.required= true;
+                otherSelect.required= false;
 
+            } else if (typeSelect.value === "Raw Material") {
+                console.log("materials");
+                stageSelect.required = false;
+                materialSelect.required = true;
+                dseriesSelect.required= false;
+                otherSelect.required= false;
 
-
-
-
-
-
-
-
-
-
+            } else if (typeSelect.value === "Scrap/General"){
+           
+                stageSelect.required = false;
+                materialSelect.required = false;
+                dseriesSelect.required= false;
+                otherSelect.required= true;
+       
+            }
+    }
+        //to select "pvc in plant" if from and to plant is same
+        $(document).on('change','#type,#fplant,#tplant',function(){
+            var type = $('#type').val();
+            var fplant=$('#fplant').val();
+            var tplant=$('#tplant').val();
+  
+            if(type=='Raw Material' && fplant==tplant){
+        
+                $('#material').val('PVC COMPOUND ( IN PLANT )');
+                    var optionToDisable = $('#material option').filter(function() {
+                    return $(this).val() === 'PVC COMPOUND';
+                });
+                optionToDisable.prop('disabled', true);
+            }
+            else{
+                $('#material').val('');
+            }
+        });
+       
         //automatically select tplant on basis of tplant
         // Get the select elements
         // const fplantSelect = document.getElementById("fplant");

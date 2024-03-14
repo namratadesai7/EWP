@@ -20,9 +20,12 @@ if (true) {
                         <th>Name</th>
                         <th>From Plant</th>
                         <th>To Plant </th>
+                        <th>Type</th>
                         <th>Drum Series</th>
                         <th>Drum No.</th>
                         <th>Stage</th>
+                        <th>Material</th>
+                        <th>Scrap/General</th>
                         <th>No of core</th>
                         <th>Corepair</th>
                         <th>Sqmm</th>
@@ -45,9 +48,12 @@ if (true) {
                 <td>'. $row['Name'].'</td>
                 <td>'. $row['From_Plant'].'</td>
                 <td>'. $row['To_Plant'].'</td>
+                <td>'. $row['Type'].'</td>
                 <td>'. $row['Drum_series'].'</td>
                 <td>'. $row['Drum_No'].'</td>
                 <td>'. $row['Stage'].'</td>
+                <td>'. $row['Material'].'</td>
+                <td>'. $row['Others'].'</td>
                 <td>'. $row['No_of_core'].'</td>
                 <td>'. $row['corepair'].'</td>
                 <td>'. $row['Sqmm'].'</td>

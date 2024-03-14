@@ -118,7 +118,6 @@ $year = date('Y', strtotime("$month-01"));
             <th>AMOUNT</th>
        </tr>
        <?php
-
         $sql="SELECT DISTINCT(total_qnty),total_amt,CAT,type,qnty,rate,amt,id FROM summary WHERE contrator='$contractor' AND month='$month' AND CAT='Drum' AND isdelete=0";
         $run=sqlsrv_query($conn,$sql);
         while($row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC)){
@@ -205,13 +204,14 @@ $year = date('Y', strtotime("$month-01"));
             <td><input type="number" class="damt"  name="amt[]" step="0.01"  value="<?php echo $row9['amt']    ?>"></td>
         </tr>
        <?php  }
-      
-?>
+      $run20=sqlsrv_query($conn,$sql9);
+      $row20=sqlsrv_fetch_array($run20,SQLSRV_FETCH_ASSOC);
+    ?>
         <tr >
             <td colspan="2"></td>
-            <td class="totcol"> <input type="number"  id="dtqty" name="dtqty" class="tqty" value="<?php echo $btqty ?>" readonly></td>
+            <td class="totcol"> <input type="number"  id="dtqty" name="dtqty" class="tqty"  readonly></td>
             <td></td>
-            <td class="totcol"><input type="number" id="dtamt" name="dtamt" class="tamt3" value="<?php echo $btamt ?>" readonly></td>
+            <td class="totcol"><input type="number" id="dtamt" name="dtamt" class="tamt3"  readonly></td>
         </tr> 
 
 
@@ -254,6 +254,45 @@ $year = date('Y', strtotime("$month-01"));
             <td class="totcol"><input type="number" id="btamt" name="btamt" class="tamt1" value="<?php echo $btamt ?>" readonly></td>
         </tr> 
 
+        <tr class="head"> 
+             <td class="text-center"  colspan="5"> <b>C. OTHER SHIFTING & MANPOWER MONTH OF <?php  echo date('F-Y',strtotime($month))  ?></b> </td>  
+        </tr>
+       <tr  class="bg-secondary text-light">
+            <th>MATERIALS</th>
+            <th>QTY</th>
+            <th>FINAL QTY</th>
+            <th>RATE</th>
+            <th>AMOUNT</th>
+       </tr>
+       <?php
+        $sql9="SELECT DISTINCT(total_qnty),total_amt,CAT,type,qnty,rate,amt,final_qnty,id  FROM summary WHERE contrator='$contractor' AND month='$month' AND CAT='Manpower' AND isdelete=0";
+        $run9=sqlsrv_query($conn,$sql9);
+       
+        while($row9=sqlsrv_fetch_array($run9,SQLSRV_FETCH_ASSOC)){
+            $etqty=$row9['total_qnty'];
+            $etamt=$row9['total_amt'];
+    ?>
+            <th>
+                <input type="text" class="emat"  name="type[]" autocomplete="off" value="<?php echo $row9['type']?>">
+                <input type="hidden" name="cat[]" class="cat"  value=<?php  echo $row9['CAT'] ?>>
+                <input type="hidden" name="id[]" class="id"  value=<?php echo $row9['id']   ?>>
+                <input type="hidden" name="remark[]"  class="remark">
+            </th>
+            <td><input type="number" class="eqty" name="qty[]" step="0.01" value="<?php echo $row9['qnty'] ?>" autocomplete="off"></td>
+            <td><input type="number" class="efqty"  name="fqty[]"  step="0.01"  value="<?php echo $row9['final_qnty'] ?>"></td>
+            <td><input type="number" class="erate"  name="rate[]" step="0.01"  value="<?php echo $row9['rate'] ?>" ></td>
+            <td><input type="number" class="eamt"  name="amt[]" step="0.01"  value="<?php echo $row9['amt']    ?>"></td>
+        </tr>
+       <?php  }
+      
+    ?>
+        <tr >
+            <td colspan="2"></td>
+            <td class="totcol"> <input type="number"  id="etqty" step="0.01" name="etqty" class="tqty" value="<?php echo $etqty ?>" readonly></td>
+            <td></td>
+            <td class="totcol"><input type="number" id="etamt" step="0.01" name="etamt" class="tamt4" value="<?php echo $etamt ?>" readonly></td>
+        </tr> 
+ 
 
         <tr class="head">
             <td class="text-center"  colspan="5"><b>PURCHASE MATERIALS (UNLOADING) MONTH OF <?php  echo date('F-Y',strtotime($month))  ?> </b> </td>  
@@ -303,8 +342,12 @@ $year = date('Y', strtotime("$month-01"));
                     $sql7="select DISTINCT(tqty) from purchase_data  where main_grade='".$row4['type']."' AND month='$month' and is_cancel=0 ";    
                     $run7=sqlsrv_query($conn,$sql7);
                     $row7=sqlsrv_fetch_array($run7,SQLSRV_FETCH_ASSOC);
+                   $abc= $row7['tqty']??'';
+                   if($abc!=''){
+                    $abc=$abc/1000;
+                   }
             ?>
-                  <td><input type="number"  step="0.1" class="cqty"  name="qty[]" autocomplete="off" value="<?php echo $row7['tqty']/1000 ?>"  readonly></td>
+                  <td><input type="number"  step="0.1" class="cqty"  name="qty[]" autocomplete="off" value="<?php echo $abc  ?>"  readonly></td>
             <?php
                }
             ?>
@@ -326,7 +369,7 @@ $year = date('Y', strtotime("$month-01"));
             <td class="totcol"><input type="number"   id="ctqty" name="ctqty" class="ctqty"  readonly></td>
             <td colspan="2"></td>
          
-            <td class="totcol"><input type="number"   id="ctamt" name="ctamt" class="tamt2" readonly></td>
+            <td class="totcol"><input type="number"   id="ctamt" name="ctamt" class="tamt2" value="0" readonly></td>
        </tr> 
         <!-- <tr >
             <td ></td>
@@ -382,7 +425,7 @@ $year = date('Y', strtotime("$month-01"));
             <td class="abc" colspan="4">TOTAL=PURCHASE+SHIFTING</td>
             <!-- <td style="background-color:#d9d9d9"> <input type="number" name="total" id="total" class="total" value=""></td> -->
             <!-- <?   $abc= $row['total_amt']+$row2['total_amt']+$row4['total_amt']; ?> -->
-            <td style="background-color:#d9d9d9"> <input type="number" step="0.01"  name="total" id="total" class="total" value=""></td>
+            <td style="background-color:#d9d9d9"> <input type="number" step="0.01"  name="total" id="total" class="total" ></td>
         </tr>
         <tr class="head"> <TH colspan="5"><b>SUMMARY MONTH OF <?php echo date('F-Y',strtotime($month))    ?> (JOB WORK BILL)</b></TH>
         </tr>
@@ -604,8 +647,22 @@ include('../includes/footer.php');
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
         var tamt4 = parseFloat($(".tamt3").val());
-        $(".total").val((tamt1 + tamt2 + tamt3 + tamt4).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        var tamt5 = parseFloat($(".tamt4").val());
+
+        // Replace NaN values with 0
+        tamt1 = isNaN(tamt1) ? 0 : tamt1;
+        tamt2 = isNaN(tamt2) ? 0 : tamt2;
+        tamt3 = isNaN(tamt3) ? 0 : tamt3;
+        tamt4 = isNaN(tamt4) ? 0 : tamt4;
+        tamt5 = isNaN(tamt5) ? 0 : tamt5;
+
+        console.log(tamt1, tamt2, tamt4);
+
+        // Perform the calculation
+        var totalAmount = (tamt1 + tamt2 + tamt3 + tamt4+tamt5).toFixed(2);
+        $(".total").val(totalAmount);
+        $("#tamount").val(totalAmount);
+
         let totalSum1 = 0;
         
         $('.tamount').each(function () {
@@ -650,8 +707,22 @@ include('../includes/footer.php');
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
         var tamt4 = parseFloat($(".tamt3").val());
-        $(".total").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        var tamt5 = parseFloat($(".tamt4").val());
+
+        // Replace NaN values with 0
+        tamt1 = isNaN(tamt1) ? 0 : tamt1;
+        tamt2 = isNaN(tamt2) ? 0 : tamt2;
+        tamt3 = isNaN(tamt3) ? 0 : tamt3;
+        tamt4 = isNaN(tamt4) ? 0 : tamt4;
+        tamt5 = isNaN(tamt5) ? 0 : tamt5;
+
+        console.log(tamt1, tamt2, tamt4);
+
+        // Perform the calculation
+        var totalAmount = (tamt1 + tamt2 + tamt3 + tamt4+tamt5).toFixed(2);
+        $(".total").val(totalAmount);
+        $("#tamount").val(totalAmount);
+
         let totalSum1 = 0;
         
         $('.tamount').each(function () {
@@ -696,8 +767,83 @@ include('../includes/footer.php');
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
         var tamt4 = parseFloat($(".tamt3").val());
-        $(".total").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        var tamt5 = parseFloat($(".tamt4").val());
+
+        // Replace NaN values with 0
+        tamt1 = isNaN(tamt1) ? 0 : tamt1;
+        tamt2 = isNaN(tamt2) ? 0 : tamt2;
+        tamt3 = isNaN(tamt3) ? 0 : tamt3;
+        tamt4 = isNaN(tamt4) ? 0 : tamt4;
+        tamt5 = isNaN(tamt5) ? 0 : tamt5;
+
+        console.log(tamt1, tamt2, tamt4);
+
+        // Perform the calculation
+        var totalAmount = (tamt1 + tamt2 + tamt3 + tamt4+tamt5).toFixed(2);
+        $(".total").val(totalAmount);
+        $("#tamount").val(totalAmount);
+
+        let totalSum1 = 0;
+        
+        $('.tamount').each(function () {
+            const value = parseFloat($(this).val());
+            
+            if (!isNaN(value)) {
+                totalSum1 += value;
+            } 
+        });
+        // Display the total sum
+        $('#grandtotal').val(totalSum1.toFixed(2));
+       // $("#grandtotal").val((tamt1 + tamt2 + tamt3).toFixed(2));
+    
+    });
+     //manpower
+     $(document).on("change",".efqty,.erate",function(){
+        var amt = 0;
+        var totalSum= 0;
+        var rate = $(this).closest('tr').find('.erate').val();
+        var qty = $(this).closest('tr').find('.efqty').val(); 
+        $(this).closest('tr').find('.eamt').val((rate*qty).toFixed(2));
+
+        $('.efqty').each(function () {
+                const value = parseFloat($(this).val());
+             
+                if (!isNaN(value)) {
+                    totalSum += value;
+                } 
+            });
+            // Display the total sum
+            $('#etqty').val((totalSum).toFixed(2));
+
+        $('.eamt').each(function () {
+            const value= parseFloat($(this).val());
+            if (!isNaN(value)) {
+                amt += value;
+            }
+            });
+         
+        $(".tamt4").val((amt).toFixed(2));   
+        var tamt1 = parseFloat($(".tamt").val());
+        var tamt2 = parseFloat($(".tamt1").val());
+        var tamt3 = parseFloat($(".tamt2").val());
+        var tamt4 = parseFloat($(".tamt3").val());
+        var tamt5 = parseFloat($(".tamt4").val());
+
+        // Replace NaN values with 0
+        tamt1 = isNaN(tamt1) ? 0 : tamt1;
+        tamt2 = isNaN(tamt2) ? 0 : tamt2;
+        tamt3 = isNaN(tamt3) ? 0 : tamt3;
+        tamt4 = isNaN(tamt4) ? 0 : tamt4;
+        tamt5 = isNaN(tamt5) ? 0 : tamt5;
+
+        console.log(tamt1, tamt2, tamt4);
+
+        // Perform the calculation
+        var totalAmount = (tamt1 + tamt2 + tamt3 + tamt4+tamt5).toFixed(2);
+        $(".total").val(totalAmount);
+        $("#tamount").val(totalAmount);
+
+
         let totalSum1 = 0;
         
         $('.tamount').each(function () {
@@ -742,8 +888,22 @@ include('../includes/footer.php');
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
         var tamt4 = parseFloat($(".tamt3").val());
-        $(".total").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        var tamt5 = parseFloat($(".tamt4").val());
+
+        // Replace NaN values with 0
+        tamt1 = isNaN(tamt1) ? 0 : tamt1;
+        tamt2 = isNaN(tamt2) ? 0 : tamt2;
+        tamt3 = isNaN(tamt3) ? 0 : tamt3;
+        tamt4 = isNaN(tamt4) ? 0 : tamt4;
+        tamt5 = isNaN(tamt5) ? 0 : tamt5;
+
+        console.log(tamt1, tamt2, tamt4);
+
+        // Perform the calculation
+        var totalAmount = (tamt1 + tamt2 + tamt3 + tamt4+tamt5).toFixed(2);
+        $(".total").val(totalAmount);
+        $("#tamount").val(totalAmount);
+
         let totalSum1 = 0;
         
         $('.tamount').each(function () {
@@ -789,8 +949,20 @@ include('../includes/footer.php');
         var tamt2 = parseFloat($(".tamt1").val());
         var tamt3 = parseFloat($(".tamt2").val());
         var tamt4 = parseFloat($(".tamt3").val());
-        $(".total").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
-        $("#tamount").val((tamt1 + tamt2 + tamt3 +tamt4).toFixed(2));
+        var tamt5 = parseFloat($(".tamt4").val());
+
+        // Replace NaN values with 0
+        tamt1 = isNaN(tamt1) ? 0 : tamt1;
+        tamt2 = isNaN(tamt2) ? 0 : tamt2;
+        tamt3 = isNaN(tamt3) ? 0 : tamt3;
+        tamt4 = isNaN(tamt4) ? 0 : tamt4;
+        tamt5 = isNaN(tamt5) ? 0 : tamt5;
+
+        // Perform the calculation
+        var totalAmount = (tamt1 + tamt2 + tamt3 + tamt4+tamt5).toFixed(2);
+        $(".total").val(totalAmount);
+        $("#tamount").val(totalAmount);
+
         let totalSum = 0;
         
         $('.tamount').each(function () {

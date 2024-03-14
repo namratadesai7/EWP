@@ -184,7 +184,6 @@ $year=date('Y');
                             <?php } ?>
                         </select>
                     </label>
-                
                     <label  class="form-label col-lg-3 col-md-6" for="tplant">To-Plant
                         <select  class="form-select" name="tplant" id="tplant" required  >
                             <option disabled selected value=""></option>
@@ -200,10 +199,10 @@ $year=date('Y');
                      
                     <label  class="form-label col-lg-3 col-md-6" for="type">Type
                         <select  class="form-select" name="type" id="type" required  onchange="toggleRequired()">>
-                            <option disabled selected value=""></option>
-                            <option <?php if($type=="drums"){ ?> selected  <?php } ?> value="drums">Drums</option>
-                            <option <?php if($type=="material"){ ?> selected  <?php } ?> value="material">Raw Material</option>
-                            <option <?php if($type=="other"){ ?> selected  <?php }  ?> value="other">Scrap/General</option>
+                            <option disabled value=""></option>
+                            <option selected value="drums">Drums</option>
+                            <option  value="Raw Material">Raw Material</option>
+                            <option  value="Scrap/General">Scrap/General</option>
                         </select>
                     </label>
                     <label  class="form-label col-lg-3 col-md-6 stage" for="stage">Stage
@@ -220,20 +219,22 @@ $year=date('Y');
                     </label>
                     
                     <label  class="form-label col-lg-3 col-md-6 material" for="material">Material
-                        <select  class="form-select" name="material" id="material" required >
-                            <option disabled selected value=""></option>
-                            <?php
-                            $sql3="SELECT name FROM drum_material where isDelete=0";
-                            $run3=sqlsrv_query($conn,$sql3);
+                       
+                        <select  class="form-select" name="material" id="material"  >
+                 
+                        <?php
+                        $sql3="SELECT name FROM drum_material where isDelete=0";
+                        $run3=sqlsrv_query($conn,$sql3);
+        
                             while( $row3=sqlsrv_fetch_array($run3,SQLSRV_FETCH_ASSOC)){
                             ?>  
-                            <option  ><?php echo $row3['name'] ?></option>                        
+                            <option   ><?php echo $row3['name'] ?></option>                        
                             <?php } ?>
                         </select>
                     </label>
 
                     <label  class="form-label col-lg-3 col-md-6 other" for="other" >Other
-                        <select  class="form-select" id="other"  name="other" required>
+                        <select  class="form-select" id="other"  name="other" >
                          
                             <?php
                             $sql3="SELECT name FROM drum_other where isDelete=0";
@@ -256,7 +257,7 @@ $year=date('Y');
                     </label>
                 
                     <label  class="form-label col-lg-2 col-md-6 hideLabel" for="dseries">Drum Series
-                        <select  class="form-select" name="dseries" id="dseries" required >
+                        <select  class="form-select" name="dseries" id="dseries"  >
                             <option disabled selected value=""></option>
                             <?php
                             $sql3="SELECT name FROM drum_series where isDelete=0";
@@ -279,9 +280,9 @@ $year=date('Y');
                     <label  class="form-label col-lg-2 col-md-6 hideLabel" for="corepair">Core/Pair
                         <select  class="form-select" name="corepair" id="corepair">
                             <option value=""></option>
-                            <option <?php if($corepair=="core")   { ?> selected <?php } ?> value="core">Core</option>
-                            <option <?php if($corepair=="pair")  { ?> selected <?php } ?> value="pair">Pair</option>
-                            <option <?php if($corepair=="filler")  { ?> selected <?php } ?> value="filler">Filler</option>
+                            <option <?php if($corepair=="core") { ?> selected <?php } ?> value="core">Core</option>
+                            <option <?php if($corepair=="pair") { ?> selected <?php } ?> value="pair">Pair</option>
+                            <option <?php if($corepair=="filler") { ?> selected <?php } ?> value="filler">Filler</option>
                         </select>
                     </label>
                     
@@ -358,9 +359,8 @@ $year=date('Y');
                     
                         <?php
                             $sr=1;
-                            $sql="SELECT * FROM Dshift WHERE  format(Date,'MM')='$mon' and format(Date,'yyyy')='$year' order by Date desc, id DESC";
+                            $sql="SELECT * FROM Dshift WHERE format(Date,'yyyy')='$year' order by Date desc, id DESC"; // format(Date,'MM')='$mon' and 
                             $run=sqlsrv_query($conn,$sql);
-                            
                             while($row=sqlsrv_fetch_array($run,SQLSRV_FETCH_ASSOC)){
                         ?>
                             <tr>
@@ -396,48 +396,92 @@ $year=date('Y');
 <script>
     $('#dshift').addClass('active');
 
-
-
-
-     $(document).on('click','.getexcel',function(){
-    var mon=$('#month').val();
-    console.log(mon);
-     })
-
-     $(document).ready(function(){
-		var table = $('#drumTable').DataTable({   // initializes a DataTable using the DataTables library 
-		    "processing": true,                  //This option enables the processing indicator to be shown while the table is being processed
-			 dom: 'Bfrtip',                      // This option specifies the layout of the table's user interface B-buttons,f-flitering input control,T-table,I-informationsummary,P-pagination
-			 ordering: false,                   //sort the columns by clicking on the header cells if true
-			 destroy: true,                     //This option indicates that if this DataTable instance is re-initialized, 
-                                                //the previous instance should be destroyed. This is useful when you need to re-create the table dynamically.
+    $(document).ready(function() {
+        var materialSelect = $('#material');
+            var otherselect= $('#other');
             
-		 	lengthMenu: [
-            	[ 15, 25, -1 ],
-            	[ '15 rows','25 rows','Show all' ]
-        	],
-			 buttons: [
-		 		'pageLength','copy', 'excel',
-                 {
-                    text:'ViewAll', className:'viewall',
-                    action:function(){
-                        $('#spinLoader').html('<span class="spinner-border spinner-border-lg mx-2"></span><p>Loading..</p>');
-                        $('#putTable').css({"opacity":"0.5"});
+            var dseriesselect=$('#dseries');
+            var dnumselect=$('#dnum');
+            var ncoreselect=$('#ncore');
+            var corepairselect=$('#corepair');
+            var sqmmselect=$('#sqmm');
+            var ctypeelect=$('#ctype');
+         
+            dseriesselect.prop('required', true);
+            dnumselect.prop('required', true);
+            ncoreselect.prop('required', true);
+            corepairselect.prop('required', true);
+            sqmmselect.prop('required', true);
+            ctypeelect.prop('required', true);
+            materialSelect.prop('required', false);
+            otherselect.prop('required', false);
+        $('#type').change(function() {
+          
+            var selectedType = $(this).val();
 
-                        $.ajax({
-                            url:'drumshift_view.php',
-                            type:'post',
-                            data:{ },
-                            success:function(data){
-                                $('#putTable').html(data);
-                                $('#spinLoader').html('');
-                                $('#putTable').css({"opacity":"1"});
-                            }
-                        });
-                    }
-                },
-        	]
-    	});
+          if (selectedType === 'Raw Material') {
+                dseriesselect.prop('required', false);
+                dnumselect.prop('required', false);
+                ncoreselect.prop('required', false);
+                corepairselect.prop('required', false);
+                sqmmselect.prop('required', false);
+                ctypeelect.prop('required', false);
+
+                materialSelect.prop('required', true);
+                otherselect.prop('required', false);
+            } else if(selectedType === 'Scrap/General') {
+                dseriesselect.prop('required', false);
+                dnumselect.prop('required', false);
+                ncoreselect.prop('required', false);
+                corepairselect.prop('required', false);
+                sqmmselect.prop('required', false);
+                ctypeelect.prop('required', false);
+
+                otherselect.prop('required', true);
+                materialSelect.prop('required', false);
+            }
+        });
+    });
+
+    $(document).on('click','.getexcel',function(){
+        var mon=$('#month').val();
+        console.log(mon);
+        })
+
+        $(document).ready(function(){
+            var table = $('#drumTable').DataTable({   // initializes a DataTable using the DataTables library 
+                "processing": true,                  //This option enables the processing indicator to be shown while the table is being processed
+                dom: 'Bfrtip',                      // This option specifies the layout of the table's user interface B-buttons,f-flitering input control,T-table,I-informationsummary,P-pagination
+                ordering: false,                   //sort the columns by clicking on the header cells if true
+                destroy: true,                     //This option indicates that if this DataTable instance is re-initialized, 
+                                                    //the previous instance should be destroyed. This is useful when you need to re-create the table dynamically.
+                
+                lengthMenu: [
+                    [ 15, 25, -1 ],
+                    [ '15 rows','25 rows','Show all' ]
+                ],
+                buttons: [
+                    'pageLength','copy', 'excel',
+                    {
+                        text:'ViewAll', className:'viewall',
+                        action:function(){
+                            $('#spinLoader').html('<span class="spinner-border spinner-border-lg mx-2"></span><p>Loading..</p>');
+                            $('#putTable').css({"opacity":"0.5"});
+
+                            $.ajax({
+                                url:'drumshift_view.php',
+                                type:'post',
+                                data:{ },
+                                success:function(data){
+                                    $('#putTable').html(data);
+                                    $('#spinLoader').html('');
+                                    $('#putTable').css({"opacity":"1"});
+                                }
+                            });
+                        }
+                    },
+                ]
+            });
  	});
 
     // for making stage/material/other required.
@@ -454,7 +498,8 @@ $year=date('Y');
             materialSelect.required = false;
  
             dseriesSelect.required= true;
-        } else if (typeSelect.value === "material") {
+        } else if (typeSelect.value === "Raw Material") {
+            console.log("dss");
             stageSelect.required = false;
             materialSelect.required = true;
  
@@ -514,14 +559,14 @@ $year=date('Y');
 
 
             }
-            if(type=='material'){
+            if(type=='Raw Material'){
                 $('.stage').hide();
                 $('.material').show();
                 $('.other').hide();
                 $('.hideLabel').hide();
 
             }
-            if(type=='other'){
+            if(type=='Scrap/General'){
                 $('.stage').hide();
                 $('.material').hide();
                 $('.other').show();
@@ -545,6 +590,26 @@ $year=date('Y');
             }
         });
 
+        $(document).on('change','#type,#fplant,#tplant',function(){
+            var type = $('#type').val();
+            var fplant=$('#fplant').val();
+            var tplant=$('#tplant').val();
+            console.log(fplant);
+            if(type=='Raw Material' && fplant==tplant){
+        
+                $('#material').val('PVC COMPOUND ( IN PLANT )');
+                var optionToDisable = $('#material option').filter(function() {
+                     return $(this).val() === 'PVC COMPOUND';
+                });
+                optionToDisable.prop('disabled', true);
+
+        
+            }
+            else{
+                $('#material').val('');
+
+            }
+        });
 
 
   

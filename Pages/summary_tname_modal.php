@@ -65,7 +65,6 @@ $year = date('Y', strtotime("$mon-01"));
             <tr>
                 <td><?php echo $sr ?></td>
                 <td><?php echo $row['Fromdate']->format('Y-m-d')  ?></td>
-               
                 <td><?php echo $row['ttwt']  ?></td>
                 <td><?php echo $row['Type']  ?></td>
                 <td><?php echo $row['Name']  ?></td>

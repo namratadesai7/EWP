@@ -26,7 +26,7 @@ class MYPDF extends TCPDF {
         $this->SetFont('times', 'B', 9);
         $this->SetY(17); // Adjust the Y position for the third line
         $this->SetX(2);
-        $this->Cell(0, 10, '2204,2205,1701/2,G.I.D.C ESTATE,HALOL-389 350.', 0, 0, 'C');
+        $this->Cell(0, 10, '2106,2204,2205,1701/2,G.I.D.C ESTATE,HALOL-389 350.', 0, 0, 'C');
       
         $this->SetFont('times', 'B', 15);
         $this->SetX(2);
@@ -78,6 +78,9 @@ $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 // set auto page breaks
 $pdf->SetAutoPageBreak(TRUE, 2);
 $pdf->AddPage();
+
+
+$pdf->setPrintHeader(false);
 // Logo
 
 		//Set font
@@ -85,14 +88,14 @@ $pdf->AddPage();
 		include('../includes/dbcon.php');
         $id= $_GET['pdf'];
       
-		$sql="SELECT From_Plant,To_Plant,Challanno,Date,No_of_core,corepair,ConductorType,Drum_No,Qnty,Stage,Name_of_contractor,Name FROM DShift where challanno='$id'";
+		$sql="SELECT From_Plant,To_Plant,Challanno,Date,No_of_core,corepair,ConductorType,Drum_No,Qnty,Stage,Name_of_contractor,Name,Sqmm FROM DShift where challanno='$id'";
         $run=sqlsrv_query($conn,$sql);
         $row=sqlsrv_fetch_array($run, SQLSRV_FETCH_ASSOC);
 
        
         $output = '<table style="width:100%; padding:4px;" border="1">
         <tr>
-            <th><b>FROM:</b>' . $row['From_Plant'] . '</th>
+            <th><b>FROM:</b>' .$row['From_Plant'] . '</th>
             <th><b>TO:</b>' . $row['To_Plant'] . '</th>
         </tr>
         <tr>
@@ -106,7 +109,7 @@ $pdf->AddPage();
 
         $output .= '<table style="width:100%; padding:4px;" border="1">
                 <tr>
-                    <th><b>Type of Drums:</b>' . $initialRowData['Stage'] . '</th>
+                    <th><b>Type of Drums:</b>' . $initialRowData['Stage'].'</th>
                 </tr>
                 </table>
                 <table style="padding:4px;" border="1">
@@ -117,21 +120,24 @@ $pdf->AddPage();
                     </tr>';
 
         // Assuming $run is the result of your SQL query
-        while ($row = sqlsrv_fetch_array($run, SQLSRV_FETCH_ASSOC)) {
-        $output .= '<tr>
-                        <th>' . $row['No_of_core'] . $row['corepair'] . ' X ' . $row['Sqmm'] . $row['ConductorType'] . '</th>
-                        <td>' . $row['Drum_No'] . '</td>
-                        <td>' . $row['Qnty'] . '</td>
+        $run1=sqlsrv_query($conn,$sql);
+        while($row1=sqlsrv_fetch_array($run1, SQLSRV_FETCH_ASSOC)) {
+            print_r($row);
+            $output .= '<tr>
+
+                        <th>' . $row1['No_of_core'] . $row1['corepair']. ' X ' . $row1['Sqmm'] . $row1['ConductorType'] . '</th>
+                        <td>' . $row1['Drum_No'] . '</td>
+                        <td>' . $row1['Qnty'] . '</td>
                     </tr>';
         }
-
+        
         $output .= '</table>';
-        $output .= '<table style="padding:4px;"  border="1">
-                    <tr>
-                        <th><b>C.W./Vehicle:</b>' . $initialRowData['Name_of_contractor'] . '</th>
-                        <th><b>Sign/Name:</b>' . $initialRowData['Name'] . '</th>
-                    </tr>
-        </table>';
+        $output .= '<table style="padding: 4px; border: 1px solid black;">
+        <tr>
+            <th style="padding: 10px; height: 35px;"><b>C.W./Vehicle:</b>' . $initialRowData['Name_of_contractor'] . '</th>
+            <th style="height: 35px;"><b>Sign/Name:</b></th>
+        </tr>
+    </table>';
 
             // <tr>
             // <th><b>C.W./Vehicle:</b>'. $row['Name_of_contractor'] .'</th>

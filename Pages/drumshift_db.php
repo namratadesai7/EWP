@@ -12,7 +12,7 @@ if(isset($_POST['save'])){
     $tplant=$_POST['tplant'];
   
     $type=$_POST['type'];
-;
+
    
     $qty=$_POST['qty'];
     $unit=$_POST['unit'];
@@ -27,7 +27,7 @@ if(isset($_POST['save'])){
         $corepair=$_POST['corepair'];
         $sqmm=$_POST['sqmm'];
         $ctype=$_POST['ctype'];
-    }else if($type=='material'){
+    }else if($type=='Raw Material'){
         $stage='';
         $other='';
         $dseries='';
@@ -38,7 +38,7 @@ if(isset($_POST['save'])){
         $ctype='';
         $material=$_POST['material'];
 
-    }else if($type='other'){
+    }else if($type='Scrap/General'){
         $stage='';
         $material='';
         $dseries='';

@@ -19,6 +19,8 @@ if(isset($_POST['save'])){
     $ctamt=$_POST['ctamt'];
     $dtqty=$_POST['dtqty'];
     $dtamt=$_POST['dtamt'];
+    $etqty=$_POST['etqty'];
+    $etamt=$_POST['etamt'];
     $fqty=$_POST['fqty'];
    // $total=$_POST['total'];
     $remark=$_POST['remark'];
@@ -27,6 +29,7 @@ if(isset($_POST['save'])){
 
    
     foreach ($type as $key => $value) {
+ 
 
         if($cat[$key]=='Drum'){
             $tqty=$atqty;
@@ -44,7 +47,11 @@ if(isset($_POST['save'])){
             $tqty=$ctqty;
             $tamt=$ctamt;
           
-        }else{
+        }elseif($cat[$key]=='Manpower'){
+            $tqty=$etqty;
+            $tamt=$etamt;
+        }
+        else{
             $tqty=0;
             $tamt=0;
             $qty[$key]=0;
@@ -57,8 +64,10 @@ if(isset($_POST['save'])){
         }
        
         $sql2="INSERT INTO summary(contrator,month,CAT,type,qnty,final_qnty,rate,amt,total_amt,total_qnty,grand_total,remark,createdBy)
-         VALUES('$cont','$date','".$cat[$key]."','".$value."','".$qty[$key]."','".$fqty[$key]."','".$rate[$key]."','".$amt[$key]."','$tamt',
-         '$tqty','$grandtotal','".$remark[$key]."','".$_SESSION['empid']."' )";
+         VALUES('$cont','$date','".$cat[$key]."','".$value."','".$qty[$key]."','".$fqty[$key]."','".$rate[$key]."','".$amt[$key]."','$tamt','$tqty',
+         '$grandtotal',
+         '".$remark[$key]."',
+         '".$_SESSION['empid']."' )";
         $run2=sqlsrv_query($conn,$sql2);
 }
     
@@ -66,7 +75,7 @@ if($run2){
     ?>
     <script>
         alert("updated successfully");
-       window.open('summary.php','_self');
+     window.open('summary.php','_self');
     </script>
     <?php
 }else{
@@ -114,6 +123,8 @@ if(isset($_POST['update'])){
     $ctamt=$_POST['ctamt'];
     $dtqty=$_POST['dtqty'];
     $dtamt=$_POST['dtamt'];
+    $etqty=$_POST['etqty'];
+    $etamt=$_POST['etamt'];
     $fqty=$_POST['fqty'];
     $total=$_POST['total'];
     $remark=$_POST['remark'];
@@ -136,7 +147,11 @@ if(isset($_POST['update'])){
         }elseif($cat[$key]=='Purchase_Unloading'){
             $tqty=$ctqty;
             $tamt=$ctamt;
-        }else{
+        }elseif($cat[$key]=='Manpower'){
+            $tqty=$etqty;
+            $tamt=$etamt;
+        }
+        else{
             $tqty=0;
             $tamt=0;
             $qty[$key]=0;

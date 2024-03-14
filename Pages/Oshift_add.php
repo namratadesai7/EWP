@@ -112,15 +112,15 @@ $date=date("Y-m-d");
                     </label>
 
                     <label class="form-label col-lg-3 col-md-6" for="twt">Total WT/Qty
-                        <input class="form-control twt" type="number" id="twt" name="twt" value="0"  >
+                        <input class="form-control twt"  step="0.01" type="number" id="twt" name="twt" value="0"  >
                     </label>
 
                     <label class="form-label col-lg-3 col-md-6" for="rate">Rate
-                        <input class="form-control rate" type="number" id="rate" name="rate"  readonly >
+                        <input class="form-control rate" step="0.01"  type="number" id="rate" name="rate"  readonly >
                     </label>
 
                     <label class="form-label col-lg-3 col-md-6" for="tamt">Total Amount 
-                        <input class="form-control tamt" type="number" id="tamt" name="tamt" value="0"  readonly >
+                        <input class="form-control tamt" step="0.01" type="number" id="tamt" name="tamt" value="0"  readonly >
                     </label>
                 
 

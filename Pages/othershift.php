@@ -3,6 +3,7 @@ include('../includes/dbcon.php');
 include('../includes/header.php');  
 $mon=date('F');
 $year=date('Y');
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +71,7 @@ $year=date('Y');
                     <tr class="bg-secondary text-light">
                         <th>Sr</th>
                         <th>Type</th>
-                        <th>FDate</th>
+                        <th>Date</th>
                         <th>Month</th>
                         <th>Team Name</th>
                         <th>M.p</th>
@@ -172,6 +173,34 @@ $year=date('Y');
         	]
     	});
  	});
+     $(document).on('change', '#month', function () {
+        var month = $('#month').val();
+      
+         // Split the selected month and year
+         var [year, selectedMonth] = month.split('-');
+
+        // Create a Date object with the year and month
+        var date = new Date(`${year}-${selectedMonth}-01`);
+
+        // Get the full month name from the Date object
+        var monthName = date.toLocaleString('default', { month: 'long' });
+
+      
+    // Now you can send the formattedMonth through AJAX
+    $.ajax({
+        url: 'Oshift_month.php',
+        type: 'post',
+        data: {
+            month: monthName,
+            year: year
+        },
+        success: function (data) {
+            $('#showdata').html(data);
+        },
+        error: function (res) {
+        }
+    });
+});
 </script>
 <?php
 

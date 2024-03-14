@@ -116,7 +116,7 @@ $result = sqlsrv_query($conn, $sql);
                     </div>
                     <div class="mb-3">
                         <label for="u_rate">Rate</label>
-                        <input type="number" name="rate" id="rate" placeholder="Enter Rate" class="form-control" required>
+                        <input type="number" name="rate" id="rate" step="0.01" placeholder="Enter Rate" class="form-control" required>
                     </div>
                 </form>
                 <div class="modal-footer">
@@ -142,7 +142,7 @@ $result = sqlsrv_query($conn, $sql);
                     </div>
                     <div class="mb-3">
                         <label for="u_rate">Rate</label>
-                        <input type="number" id="editRate" name="editRate" class="form-control" required>
+                        <input type="number" id="editRate" step="0.01" name="editRate" class="form-control" required>
                     </div>
                 </form>
                 <div class="modal-footer">
